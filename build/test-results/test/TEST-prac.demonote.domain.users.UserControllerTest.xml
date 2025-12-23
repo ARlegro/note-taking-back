@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="prac.demonote.domain.users.UserControllerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-12-23T16:50:11.635Z" hostname="DESKTOP-7LD8TIQ" time="1.055">
+  <properties/>
+  <testcase name="유효하지_않은_ID로_조회하면_400을_반환한다()" classname="prac.demonote.domain.users.UserControllerTest" time="0.289"/>
+  <testcase name="사용자_생성_요청_본문이_없으면_400을_반환한다()" classname="prac.demonote.domain.users.UserControllerTest" time="0.044"/>
+  <testcase name="유효한_사용자_생성_요청()" classname="prac.demonote.domain.users.UserControllerTest" time="0.571"/>
+  <testcase name="사용자_생성_요청이_잘못된_JSON이면_400을_반환한다()" classname="prac.demonote.domain.users.UserControllerTest" time="0.026"/>
+  <testcase name="사용자_생성_요청이_JSON이_아니면_415를_반환한다()" classname="prac.demonote.domain.users.UserControllerTest" time="0.028"/>
+  <testcase name="유효한_사용자를_조회하면_200을_반환한다()" classname="prac.demonote.domain.users.UserControllerTest" time="0.029"/>
+  <testcase name="존재하지_않는_사용자를_조회하면_404를_반환한다()" classname="prac.demonote.domain.users.UserControllerTest" time="0.027"/>
+  <system-out><![CDATA[01:50:06.176 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [prac.demonote.domain.users.UserControllerTest]: UserControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+01:50:06.572 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration prac.demonote.DemoNoteApplication for test class prac.demonote.domain.users.UserControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.0)
+
+2025-12-24T01:50:07.493+09:00  INFO 51400 --- [    Test worker] p.d.domain.users.UserControllerTest      : Starting UserControllerTest using Java 21.0.9 with PID 51400 (started by root in /root/note-taking-back)
+2025-12-24T01:50:07.497+09:00  INFO 51400 --- [    Test worker] p.d.domain.users.UserControllerTest      : No active profile set, falling back to 1 default profile: "default"
+2025-12-24T01:50:11.057+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+	p.d.d.u.UserController:
+	{POST [/api/users]}: createUser(UserRequest)
+	{GET [/api/users/{userId}]}: getUser(UUID)
+2025-12-24T01:50:11.097+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+	o.s.b.w.a.e.BasicErrorController:
+	{ [/error]}: error(HttpServletRequest)
+	{ [/error], produces [text/html]}: errorHtml(HttpServletRequest,HttpServletResponse)
+2025-12-24T01:50:11.106+09:00 DEBUG 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 4 mappings in 'requestMappingHandlerMapping'
+2025-12-24T01:50:11.269+09:00 DEBUG 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-24T01:50:11.407+09:00 DEBUG 51400 --- [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-24T01:50:11.517+09:00  INFO 51400 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2025-12-24T01:50:11.518+09:00  INFO 51400 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-12-24T01:50:11.528+09:00  INFO 51400 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 7 ms
+2025-12-24T01:50:11.601+09:00  INFO 51400 --- [    Test worker] p.d.domain.users.UserControllerTest      : Started UserControllerTest in 4.905 seconds (process running for 8.438)
+2025-12-24T01:50:11.808+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#getUser(UUID)
+2025-12-24T01:50:11.876+09:00  WARN 51400 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'userId': Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: invalid-uuid]
+2025-12-24T01:50:11.945+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#createUser(UserRequest)
+2025-12-24T01:50:11.958+09:00 TRACE 51400 --- [    Test worker] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to []
+2025-12-24T01:50:11.964+09:00  WARN 51400 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<prac.demonote.domain.users.dto.UserResponse> prac.demonote.domain.users.UserController.createUser(prac.demonote.domain.users.dto.UserRequest)]
+2025-12-24T01:50:12.136+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#createUser(UserRequest)
+2025-12-24T01:50:12.200+09:00 TRACE 51400 --- [    Test worker] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [UserRequest[email=new@example.com, provider=GITHUB, providerId=gh-123]]
+2025-12-24T01:50:12.287+09:00 DEBUG 51400 --- [    Test worker] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/yaml]
+2025-12-24T01:50:12.298+09:00 TRACE 51400 --- [    Test worker] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [UserResponse[id=6bb3d83c-bc7b-4b46-84f1-4a626cefb00e, email=new@example.com, provider=GITHUB, providerId=gh-123]]
+2025-12-24T01:50:12.319+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : Applying default cacheSeconds=-1
+2025-12-24T01:50:12.570+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#createUser(UserRequest)
+2025-12-24T01:50:12.574+09:00  WARN 51400 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input: expected close marker for Object (start marker at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); byte offset: #UNKNOWN])]
+2025-12-24T01:50:12.603+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#createUser(UserRequest)
+2025-12-24T01:50:12.611+09:00  WARN 51400 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'text/plain;charset=UTF-8' is not supported]
+2025-12-24T01:50:12.637+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#getUser(UUID)
+2025-12-24T01:50:12.646+09:00 DEBUG 51400 --- [    Test worker] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/yaml]
+2025-12-24T01:50:12.647+09:00 TRACE 51400 --- [    Test worker] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [UserResponse[id=07be68c6-753e-4b5f-a43c-b179283e51b7, email=user@example.com, provider=GOOGLE, providerId=provider-id]]
+2025-12-24T01:50:12.649+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : Applying default cacheSeconds=-1
+2025-12-24T01:50:12.675+09:00 TRACE 51400 --- [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to prac.demonote.domain.users.UserController#getUser(UUID)
+2025-12-24T01:50:12.678+09:00 DEBUG 51400 --- [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler prac.demonote.domain.users.UserController#handleUserNotFound()
+2025-12-24T01:50:12.681+09:00 DEBUG 51400 --- [    Test worker] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2025-12-24T01:50:12.682+09:00 DEBUG 51400 --- [    Test worker] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2025-12-24T01:50:12.682+09:00 DEBUG 51400 --- [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [prac.demonote.domain.users.UserNotFoundException: User not found: cb7c8cf4-3896-4091-80c1-7484c3587522]
+]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/root/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.8/f09415827a71be7ed621c7bd02550678f28bc81c/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-import prac.demonote.domain.users.dto.UserRequest;
+import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
 
 import java.util.Optional;
@@ -36,7 +35,6 @@ class UserServiceTest {
         String provider = "GOOGLE";
         String providerId = "provider-id";
         User user = new User(email, provider, providerId);
-        ReflectionTestUtils.setField(user, "id", userId);
         UserResponse response = new UserResponse(userId, email, provider, providerId);
 
         // given
@@ -56,10 +54,9 @@ class UserServiceTest {
         String email = "new@example.com";
         String provider = "GITHUB";
         String providerId = "gh-123";
-        UserRequest request = new UserRequest(email, provider, providerId);
+        UserCreateRequest request = new UserCreateRequest(email, provider, providerId);
         User toSave = new User(email, provider, providerId);
         User saved = new User(email, provider, providerId);
-        ReflectionTestUtils.setField(saved, "id", userId);
         UserResponse response = new UserResponse(userId, email, provider, providerId);
 
         // given

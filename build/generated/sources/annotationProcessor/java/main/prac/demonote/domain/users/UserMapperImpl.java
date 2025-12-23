@@ -8,7 +8,7 @@ import prac.demonote.domain.users.dto.UserResponse;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-12-24T01:02:07+0900",
+    date = "2025-12-24T01:44:48+0900",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-9.2.1.jar, environment: Java 21.0.9 (Ubuntu)"
 )
 @Component

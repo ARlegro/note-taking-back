@@ -2,7 +2,7 @@ package prac.demonote.domain.users;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import prac.demonote.domain.users.dto.UserRequest;
+import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createUser(UserRequest request) {
+    public UserResponse createUser(UserCreateRequest request) {
         User user = userMapper.toEntity(request);
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);

@@ -17,20 +17,20 @@ import static jakarta.persistence.FetchType.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Folder extends BaseTimeWithUpdateEntity {
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "path", nullable = false)
     private String path;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = LAZY)
-    @Column(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = LAZY)
-    @Column(name = "parent_id", nullable = false)
+    @JoinColumn(name = "parent_id", nullable = false)
     private Folder parent;
 }

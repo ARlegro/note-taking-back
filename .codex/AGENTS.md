@@ -66,7 +66,7 @@ public interface {Entity}Mapper {
 - Entity: ~.java
 - Repository: ~Repository.java
 - Service: ~Service.java / ~ServiceImpl.java
-- DTO: ~Request.java / ~Response.java
+- DTO: {도메인}{동작}Request.java / {도메인}{동작}Response.java or {도메인}Response.java
 - Mapper: ~Mapper.java
 
 ## 임시 SQL

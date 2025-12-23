@@ -1,4 +1,4 @@
-package prac.demonote.domain.folder;
+package prac.demonote.common;
 
 public enum PermissionType {
     READABLE,

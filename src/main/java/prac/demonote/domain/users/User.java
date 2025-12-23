@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
 
-import java.beans.ConstructorProperties;
-
 import static lombok.AccessLevel.PROTECTED;
 
 
@@ -32,7 +30,7 @@ public class User extends BaseTimeWithUpdateEntity {
         this.email = email;
     }
 
-    @ConstructorProperties({"email", "provider", "providerId"})
+    //@ConstructorProperties({"email", "provider", "providerId"})
     public User(String email, String provider, String providerId) {
         this.email = email;
         this.provider = provider;
