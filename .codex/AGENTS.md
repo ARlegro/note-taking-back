@@ -15,9 +15,9 @@
 - attach(File)처리 시 전략패턴 사용
 
 ## TDD Convention
-1. Repository Layer: @DataJpaTest
-2. Service Layer: @ExtendWith(MockitoExtension.class)
-3. Controller Layer: @WebMvcTest
+1. Repository Layer: `@DataJpaTest`
+2. Service Layer: `@ExtendWith(MockitoExtension.class)`
+3. Controller Layer: `@WebMvcTest`
 
 **⚠ CRITICAL : 이 프로젝트는 반드시 Test-Driven Development로 개발합니다.**
 
@@ -51,15 +51,15 @@ TDD 필수 규칙(위반 금지):
 - Test: API 엔드포인트 테스트
 - Impl: Controller 구현
 
-## Database Changes
-- [ ] Migration script needed?
-
 ## MapStruct Convention
+```java
 @Mapper(componentModel = "spring")
 public interface {Entity}Mapper {
-{Entity}Response toResponse({Entity}Entity entity);
-{Entity}Entity toEntity({Entity}Request request);
+    {Entity}Response toResponse({Entity}Entity entity);
+    {Entity}Entity toEntity({Entity}Request request);
+    ...
 }
+```
 
 
 ## Naming Convention
@@ -68,4 +68,8 @@ public interface {Entity}Mapper {
 - Service: ~Service.java / ~ServiceImpl.java
 - DTO: ~Request.java / ~Response.java
 - Mapper: ~Mapper.java
+
+## 임시 SQL
+schema.sql 에 임시 설계 내용 존재<BR>
+필요 시 변경 가능
 
