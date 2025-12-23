@@ -14,11 +14,23 @@
 5. 🟦 REFACTOR: 코드 개선
 6. 🟢 GREEN: 테스트 재실행하여 통과 확인
 
+### 테스트 작성 규칙
+- 중복되는 문자열/값은 하나의 변수로 정의해서 사용한다
+- 테스트 이름은 목적이 드러나는 요구사항 형태로 작성한다 (given/when/then 금지)
+- given/when/then 방식은 메서드 내부에서 `// given`, `// when`, `// then` 주석으로 구분한다
+
 ### 레이어별 개발 순서
 각 기능마다 아래 순서로 개발:
 1. Repository Layer (`@DataJpaTest`)
 2. Service Layer (`@ExtendWith(MockitoExtension.class)`)
 3. Controller Layer (`@WebMvcTest`)
+
+---
+
+### 진행 방법
+하나의 요구사항이 끝나거나 Layer단위 테스트가 끝나면 다음 진행할지 물어보기(괜찮은지 검토 필요)
+
+컨테이너는 웬만하면 공용 컨테이너를 사용한다. PostgresTestContainer.java 
 
 ---
 
@@ -31,26 +43,23 @@
 
 **Repository Layer**
 - [ ] Test: User 엔티티 저장 테스트
-  - `givenUserEntity_whenSave_thenReturnsSavedUser()`
-  - `givenUserId_whenFindById_thenReturnsUser()`
-  - `givenEmail_whenFindByEmail_thenReturnsUser()`
 - [ ] Impl: User 엔티티 생성
   - UUID id, email, provider, providerId, createdAt, updatedAt
 - [ ] Impl: UserRepository 인터페이스
 
 **Service Layer**
 - [ ] Test: User 조회/저장 서비스 테스트
-  - `givenUserId_whenGetUser_thenReturnsUserResponse()`
-  - `givenNewUserRequest_whenCreateUser_thenReturnsCreatedUser()`
-  - `givenInvalidUserId_whenGetUser_thenThrowsNotFoundException()`
+  - `사용자_조회하면_응답을_반환한다()`
+  - `사용자_생성하면_저장된_정보를_반환한다()`
+  - `존재하지_않는_사용자를_조회하면_예외를_던진다()`
 - [ ] Impl: UserService 구현
 - [ ] Impl: UserMapper (MapStruct)
 - [ ] Impl: UserRequest/UserResponse DTO
 
 **Controller Layer**
 - [ ] Test: User API 엔드포인트 테스트
-  - `givenValidUserId_whenGetUser_thenReturns200()`
-  - `givenInvalidUserId_whenGetUser_thenReturns404()`
+  - `유효한_사용자를_조회하면_200을_반환한다()`
+  - `존재하지_않는_사용자를_조회하면_404를_반환한다()`
 - [ ] Impl: UserController
 
 [//]: # (#### Feature 1-1-2: OAuth 2.0 로그인 &#40;Google, GitHub, Kakao&#41;)
@@ -65,19 +74,27 @@
 [//]: # (- [ ] OAuth2SuccessHandler 구현)
 
 [//]: # (- [ ] JWT 토큰 생성/검증 로직)
+[//]: # ()
+[//]: # (#### Feature 1-1-3: 세션 관리 &#40;JWT&#41;)
 
-#### Feature 1-1-3: 세션 관리 (JWT)
-**우선순위**: P0
+[//]: # (**우선순위**: P0)
 
-- [ ] JwtTokenProvider 구현
-- [ ] JwtAuthenticationFilter 구현
-- [ ] 토큰 갱신 로직
+[//]: # ()
+[//]: # (- [ ] JwtTokenProvider 구현)
 
-#### Feature 1-1-4: 로그아웃
-**우선순위**: P1
+[//]: # (- [ ] JwtAuthenticationFilter 구현)
 
-- [ ] 단일 디바이스 로그아웃
-- [ ] 전체 디바이스 로그아웃
+[//]: # (- [ ] 토큰 갱신 로직)
+
+[//]: # ()
+[//]: # (#### Feature 1-1-4: 로그아웃)
+
+[//]: # (**우선순위**: P1)
+
+[//]: # ()
+[//]: # (- [ ] 단일 디바이스 로그아웃)
+
+[//]: # (- [ ] 전체 디바이스 로그아웃)
 
 ---
 
@@ -116,23 +133,23 @@
 
 **Repository Layer**
 - [ ] Test: Folder 엔티티 저장/조회 테스트
-  - `givenFolder_whenSave_thenReturnsSavedFolder()`
-  - `givenUserId_whenFindByUserId_thenReturnsFolders()`
-  - `givenParentId_whenFindByParentId_thenReturnsChildFolders()`
+  - `폴더를_저장하면_저장된_폴더를_반환한다()`
+  - `사용자_ID로_조회하면_폴더_목록을_반환한다()`
+  - `부모_ID로_조회하면_자식_폴더를_반환한다()`
 - [ ] Impl: Folder 엔티티
   - UUID id, userId, parentId, name, path, deletedAt
 - [ ] Impl: FolderRepository
 
 **Service Layer**
 - [ ] Test: 폴더 생성 테스트
-  - `givenValidFolderRequest_whenCreateFolder_thenReturnsCreatedFolder()`
-  - `givenMaxDepthExceeded_whenCreateFolder_thenThrowsException()`
-  - `givenDuplicateName_whenCreateFolder_thenThrowsException()`
+  - `유효한_요청으로_폴더를_생성하면_생성된_폴더를_반환한다()`
+  - `최대_깊이를_초과하면_예외를_던진다()`
+  - `같은_깊이에_중복_이름이_있으면_예외를_던진다()`
 - [ ] Test: 폴더 이동 테스트
-  - `givenValidTarget_whenMoveFolder_thenUpdatesPathAndChildren()`
-  - `givenDepthExceeds_whenMoveFolder_thenThrowsException()`
+  - `폴더를_이동하면_경로와_자식_경로가_갱신된다()`
+  - `이동_후_깊이가_초과되면_예외를_던진다()`
 - [ ] Test: 폴더 삭제 테스트 (Soft Delete)
-  - `givenFolderId_whenDeleteFolder_thenSetsDeletedAt()`
+  - `폴더를_삭제하면_deletedAt이_설정된다()`
 - [ ] Impl: FolderService
 - [ ] Impl: FolderMapper
 - [ ] Impl: FolderRequest/Response DTO
@@ -161,25 +178,25 @@
 
 **Repository Layer**
 - [ ] Test: Note 엔티티 저장/조회 테스트
-  - `givenNote_whenSave_thenReturnsSavedNote()`
-  - `givenNoteId_whenFindById_thenReturnsNote()`
-  - `givenFolderId_whenFindByFolderId_thenReturnsNotes()`
-  - `givenOwnerId_whenFindByOwnerId_thenReturnsNotes()`
+  - `노트를_저장하면_저장된_노트를_반환한다()`
+  - `노트_ID로_조회하면_노트를_반환한다()`
+  - `폴더_ID로_조회하면_노트_목록을_반환한다()`
+  - `소유자_ID로_조회하면_노트_목록을_반환한다()`
 - [ ] Impl: Note 엔티티
   - UUID id, ownerId, folderId, title, contentMarkdown, version, deletedAt
 - [ ] Impl: NoteRepository
 
 **Service Layer**
 - [ ] Test: 노트 생성 테스트
-  - `givenValidNoteRequest_whenCreateNote_thenReturnsCreatedNote()`
-  - `givenNoFolder_whenCreateNote_thenCreatesInRootFolder()`
+  - `유효한_요청으로_노트를_생성하면_생성된_노트를_반환한다()`
+  - `폴더가_없으면_루트에_노트를_생성한다()`
 - [ ] Test: 노트 수정 테스트
-  - `givenValidUpdate_whenUpdateNote_thenReturnsUpdatedNote()`
-  - `givenConcurrentUpdate_whenUpdateNote_thenHandlesConflict()` (version 관리)
+  - `노트를_수정하면_수정된_노트를_반환한다()`
+  - `동시_수정이_발생하면_충돌을_처리한다()` (version 관리)
 - [ ] Test: 노트 이동 테스트
-  - `givenTargetFolder_whenMoveNote_thenUpdatesFolderId()`
+  - `노트를_이동하면_폴더_ID가_갱신된다()`
 - [ ] Test: 노트 삭제 테스트 (Soft Delete)
-  - `givenNoteId_whenDeleteNote_thenSetsDeletedAt()`
+  - `노트를_삭제하면_deletedAt이_설정된다()`
 - [ ] Impl: NoteService
 - [ ] Impl: NoteMapper
 - [ ] Impl: NoteRequest/Response DTO
@@ -212,8 +229,8 @@
 
 **Service Layer**
 - [ ] Test: 노트 미리보기 조회 테스트
-  - `givenFolderId_whenGetNotePreviews_thenReturnsPreviewList()`
-  - `givenUserId_whenGetRecentNotes_thenReturnsRecentPreviews()`
+  - `폴더_ID로_미리보기를_조회하면_목록을_반환한다()`
+  - `사용자_ID로_최근_노트를_조회하면_미리보기를_반환한다()`
 - [ ] Impl: 미리보기 전용 DTO
   - title, tags, content (N자 제한, 마크다운 제거), 최근 수정 시간
 
@@ -244,12 +261,12 @@
 
 **Service Layer**
 - [ ] Test: 태그 생성 테스트
-  - `givenValidTagName_whenCreateTag_thenReturnsCreatedTag()`
-  - `givenInvalidTagName_whenCreateTag_thenThrowsException()` (공백, 특수문자 검증)
-  - `givenDuplicateTag_whenCreateTag_thenReturnsExisting()` (대소문자 무시)
+  - `유효한_태그명으로_생성하면_태그를_반환한다()`
+  - `유효하지_않은_태그명이면_예외를_던진다()` (공백, 특수문자 검증)
+  - `중복_태그명은_기존_태그를_반환한다()` (대소문자 무시)
 - [ ] Test: 노트에 태그 추가/제거 테스트
 - [ ] Test: 태그 검색 테스트
-  - `givenTagName_whenSearchByTag_thenReturnsNotes()`
+  - `태그명으로_검색하면_노트를_반환한다()`
 - [ ] Impl: TagService
 - [ ] Impl: TagMapper
 
@@ -274,11 +291,11 @@
 
 **Service Layer**
 - [ ] Test: 휴지통 조회 테스트
-  - `givenUserId_whenGetTrashItems_thenReturnsDeletedItems()`
+  - `사용자_ID로_휴지통을_조회하면_삭제된_항목을_반환한다()`
 - [ ] Test: 복구 테스트
-  - `givenDeletedNote_whenRestore_thenSetsDeletedAtToNull()`
-  - `givenDeletedFolder_whenRestore_thenRestoresWithChildren()`
-  - `givenMissingParent_whenRestore_thenRestoresToRoot()`
+  - `삭제된_노트를_복구하면_deletedAt이_null이_된다()`
+  - `삭제된_폴더를_복구하면_하위까지_복구된다()`
+  - `부모가_없으면_루트로_복구한다()`
 - [ ] Impl: TrashService
 
 **Controller Layer**
@@ -334,8 +351,8 @@
 
 **Service Layer**
 - [ ] Test: 권한 부여 테스트
-  - `givenNoteAndUser_whenGrantPermission_thenUserCanRead()`
-  - `givenFolder_whenGrantPermission_thenInheritsToChildren()`
+  - `노트에_권한을_부여하면_사용자가_읽을_수_있다()`
+  - `폴더에_권한을_부여하면_자식에_상속된다()`
 - [ ] Test: 권한 제거 테스트
 - [ ] Impl: PermissionService
 
@@ -355,8 +372,8 @@
 
 **Service Layer**
 - [ ] Test: 공유 링크 생성 테스트
-  - `givenNote_whenCreateShareLink_thenReturnsToken()`
-  - `givenExpiredLink_whenAccess_thenThrowsException()`
+  - `노트_공유_링크를_생성하면_토큰을_반환한다()`
+  - `만료된_링크에_접근하면_예외를_던진다()`
 - [ ] Test: 공유 링크 비활성화 테스트
 - [ ] Impl: ShareLinkService
 
@@ -382,9 +399,9 @@
 
 **Service Layer**
 - [ ] Test: 파일 업로드 테스트
-  - `givenImageFile_whenUpload_thenReturnsAttachmentId()`
-  - `givenInvalidFileType_whenUpload_thenThrowsException()`
-  - `givenFileSizeExceeds_whenUpload_thenThrowsException()`
+  - `이미지_파일을_업로드하면_첨부_ID를_반환한다()`
+  - `허용되지_않은_파일_타입이면_예외를_던진다()`
+  - `파일_크기가_초과되면_예외를_던진다()`
 - [ ] Impl: AttachmentService
 - [ ] Impl: StorageStrategy 인터페이스 (전략 패턴)
 - [ ] Impl: MinIOStorageStrategy
@@ -482,5 +499,5 @@
 2. **반드시 테스트 실패를 먼저 확인한다**
 3. **최소한의 코드로 테스트를 통과시킨다**
 4. **리팩토링 후 항상 테스트를 재실행한다**
-5. **given_when_then 네이밍 규칙을 따른다**
+5. **테스트 이름은 요구사항 형태로 작성한다 (given/when/then 금지)**
 6. **각 레이어별로 순차적으로 개발한다** (Repository → Service → Controller)

@@ -1,0 +1,132 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.springframework.boot",
+    "module": "spring-boot-testcontainers",
+    "version": "4.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.2.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-autoconfigure",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.testcontainers",
+          "module": "testcontainers",
+          "version": {
+            "requires": "2.0.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-testcontainers-4.0.0.jar",
+          "url": "spring-boot-testcontainers-4.0.0.jar",
+          "size": 75945,
+          "sha512": "9cc9d1e6017e92ed1c398cd7d369a35ed43709ef3725fd29bd561fb7fd29e20d157cc668533b6b8496679176879afee917a47859dd712ea9b79e6df9db3571ef",
+          "sha256": "c18cfe8140bed4f10905424c30e0b3d7b8a0518368d5c1e2cd8e2d32ef57df47",
+          "sha1": "cd1575af815158980d28a885efd82d8725f88945",
+          "md5": "9d443d43a0a25244a47eb83f1096bf57"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-autoconfigure",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.testcontainers",
+          "module": "testcontainers",
+          "version": {
+            "requires": "2.0.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-testcontainers-4.0.0.jar",
+          "url": "spring-boot-testcontainers-4.0.0.jar",
+          "size": 75945,
+          "sha512": "9cc9d1e6017e92ed1c398cd7d369a35ed43709ef3725fd29bd561fb7fd29e20d157cc668533b6b8496679176879afee917a47859dd712ea9b79e6df9db3571ef",
+          "sha256": "c18cfe8140bed4f10905424c30e0b3d7b8a0518368d5c1e2cd8e2d32ef57df47",
+          "sha1": "cd1575af815158980d28a885efd82d8725f88945",
+          "md5": "9d443d43a0a25244a47eb83f1096bf57"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-testcontainers-4.0.0-javadoc.jar",
+          "url": "spring-boot-testcontainers-4.0.0-javadoc.jar",
+          "size": 4220921,
+          "sha512": "828f9c11b59328d30411788db3f27ac5a590668e846d6b34196bd1c7880d48fa84b7cb854f32ed8439f67fc6fe86e2d6c5819c2de45da8ede2c457b6b4325c58",
+          "sha256": "90b59ee9fbc5c88b24e87437b6a77a2909976da5fc7bfc0f757619c6c558b533",
+          "sha1": "b706f1209329f8118f954d0687d402697212fdc4",
+          "md5": "9449acebc0696e38da530c3fd42c8a4e"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-testcontainers-4.0.0-sources.jar",
+          "url": "spring-boot-testcontainers-4.0.0-sources.jar",
+          "size": 52004,
+          "sha512": "97eab28585102577b8a099435068c5ed9dad5e9733718ca05db1bbfb516d7b0f5748013fd6ffe4ff85f5fc534c811b71a7765613dd3f3edb31f4c409cafa1560",
+          "sha256": "7d19820463aee4d407881570137260aa75fa844861c562c1047a0764f9fd9293",
+          "sha1": "e62fbeb7f01e91002af0b1042bd65f099be414a0",
+          "md5": "66d9353465e4b62e7653d8c45822fd9c"
+        }
+      ]
+    }
+  ]
+}
