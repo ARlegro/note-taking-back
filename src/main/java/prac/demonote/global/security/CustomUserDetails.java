@@ -14,7 +14,6 @@ import prac.demonote.domain.users.User;
 
 @Getter
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
   private final UUID userId;

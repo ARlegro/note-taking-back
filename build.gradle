@@ -10,6 +10,7 @@ description = 'demo-note'
 
 java {
     toolchain {
+
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
