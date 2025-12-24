@@ -1,4 +1,4 @@
-package prac.demonote.domain.folder;
+package prac.demonote.domain.folder.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +12,6 @@ import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
 @Getter
 public class FolderPermission extends BaseTimeWithUpdateEntity {
 
-    @Column(nullable = false)
-    private PermissionType permissionType;
+  @Column(nullable = false)
+  private PermissionType permissionType;
 }

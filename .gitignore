@@ -149,6 +149,9 @@ replay_pid*
 # Icon must end with two \r
 Icon
 
+.env
+.env.*
+
 
 # Thumbnails
 ._*

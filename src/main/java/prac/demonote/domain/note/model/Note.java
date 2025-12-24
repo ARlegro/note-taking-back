@@ -1,5 +1,6 @@
 package prac.demonote.domain.note.model;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;

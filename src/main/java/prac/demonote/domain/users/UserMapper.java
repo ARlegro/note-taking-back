@@ -6,7 +6,8 @@ import prac.demonote.domain.users.dto.UserResponse;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User toEntity(UserCreateRequest request);
 
-    UserResponse toResponse(User user);
+  User toEntity(UserCreateRequest request);
+
+  UserResponse toResponse(User user);
 }

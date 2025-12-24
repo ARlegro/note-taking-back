@@ -5,11 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class NoteServiceImpl implements NoteService{
+public class NoteServiceImpl implements NoteService {
 
   private final NoteRepository noteRepository;
-
-
 
 //  public UUID save(NoteCreateRequestDTO dto){
 //    // 테스트 코드 연습용

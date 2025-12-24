@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
+
   servlet:
     multipart:
       enabled: true  # ???? ??? ?? ??
@@ -7,7 +10,7 @@ spring:
       location: /tmp  # ?? ?? (??? OS ???)
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/note
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: user
     password: user1234
 
@@ -33,10 +36,16 @@ springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
 
+jwt:
+  secretKey: ${JWT_SECRET_KEY:secretKey}
+  # accessTokenExpiration,
+  access_token_expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}
+  refresh_token_expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:3600000}
+
 
 logging:
   level:
     org.hibernate.sql: debug # (Show-sql: true)
     org.hibernate.orm.jdbc.bind: trace
-    org.springframework.web.servlet.mvc.method.annotation: TRACE
-    org.springframework.http.converter: TRACE
+#    org.springframework.web.servlet.mvc.method.annotation: TRACE
+#    org.springframework.http.converter: TRACE
