@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import prac.demonote.global.security.handler.JwtAccessDeniedHandler;
 import prac.demonote.global.security.handler.JwtAuthenticationEntryPoint;
 import prac.demonote.global.security.jwt.JwtAuthenticationFilter;
@@ -57,17 +58,18 @@ public class SecurityConfig {
 
     List<String> allowedOrigins = List.of("*");
 
-    configuration.setAllowedOrigins(allowedOrigins);
+    // configuration.setAllowedOrigins(allowedOrigins); 나중에 쓸 거
+    configuration.setAllowedOriginPatterns(allowedOrigins);
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // front에서 읽게 해주려는, preflight땜에 content-type도
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setExposedHeaders(List.of("Authorization"));
     configuration.setAllowCredentials(false); // 쿠키,세션 인증 안하니까 false (쿠키/세션을 자동으로 포함해서 보낼지 여부)
     configuration.setMaxAge(3600L);
 
-//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    source.registerCorsConfiguration("/**", configuration);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
 
-    return request -> configuration;
+    return source;
   }
 
 
