@@ -1,0 +1,37 @@
+package prac.demonote.domain.attachment;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import prac.demonote.domain.attachment.dto.HealthCheckResponseDTO;
+
+import java.util.UUID;
+
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
+@RestController
+@RequestMapping("/api/attachments")
+@RequiredArgsConstructor
+public class AttachmentController {
+
+  private final AttachmentFacade attachmentFacade;
+
+  @GetMapping("")
+  public ResponseEntity<HealthCheckResponseDTO> healthcheck() {
+    return ResponseEntity.ok().body(new HealthCheckResponseDTO("좋았어"));
+  }
+
+  @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Void> uploadAttachment(
+      @RequestParam("attachment") MultipartFile file,
+      @RequestParam("noteId") UUID noteId
+  ) {
+    if (file.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+    System.out.println("컨트롤러 통과");
+    attachmentFacade.save(file, noteId);
+    return ResponseEntity.ok().build();
+  }
+}

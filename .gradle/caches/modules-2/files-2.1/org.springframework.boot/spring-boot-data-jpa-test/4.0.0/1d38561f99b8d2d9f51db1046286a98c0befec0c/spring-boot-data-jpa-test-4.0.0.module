@@ -1,0 +1,146 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.springframework.boot",
+    "module": "spring-boot-data-jpa-test",
+    "version": "4.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.2.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-test-autoconfigure",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-data-jpa",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-jpa-test",
+          "version": {
+            "requires": "4.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-data-jpa-test-4.0.0.jar",
+          "url": "spring-boot-data-jpa-test-4.0.0.jar",
+          "size": 9437,
+          "sha512": "fb8c1eaecd1104aa8fe905eab4c80b8729e6104e5ee3bfde5d29ea3acee1c12dd40a2a75afc8d334732218b8d5b01a7808c0b6f9ed96de88fd2616dc0b938e7c",
+          "sha256": "757daa080ec6a06ad0093833ec86f31dbb1e3aa8f62412e6beb40a5d7a815ff6",
+          "sha1": "9f8acb53844aafdf4cf705f98386571eae9f879d",
+          "md5": "93a63a857487cd49813341013b79a5e1"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-test-autoconfigure",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-data-jpa",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-jpa-test",
+          "version": {
+            "requires": "4.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-data-jpa-test-4.0.0.jar",
+          "url": "spring-boot-data-jpa-test-4.0.0.jar",
+          "size": 9437,
+          "sha512": "fb8c1eaecd1104aa8fe905eab4c80b8729e6104e5ee3bfde5d29ea3acee1c12dd40a2a75afc8d334732218b8d5b01a7808c0b6f9ed96de88fd2616dc0b938e7c",
+          "sha256": "757daa080ec6a06ad0093833ec86f31dbb1e3aa8f62412e6beb40a5d7a815ff6",
+          "sha1": "9f8acb53844aafdf4cf705f98386571eae9f879d",
+          "md5": "93a63a857487cd49813341013b79a5e1"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-data-jpa-test-4.0.0-javadoc.jar",
+          "url": "spring-boot-data-jpa-test-4.0.0-javadoc.jar",
+          "size": 4155610,
+          "sha512": "455f49625946b89d7278082a0c33788040e6d374a7952e007ddd15f38a19bd01fbe8aeae3fa0191d357ddff772e8f41d298be6c8a5e5c4eef35ba8176f428b3b",
+          "sha256": "e35e5bd59df82c2f8e289cb3ced0611eaf37b2d64f3421c2a58c8ac67a14fe2b",
+          "sha1": "c9a897c1d363b050f0d387cbf04b5e6fa65c8b77",
+          "md5": "64e77d0bd72662115f3d7c2b45d11624"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-data-jpa-test-4.0.0-sources.jar",
+          "url": "spring-boot-data-jpa-test-4.0.0-sources.jar",
+          "size": 11578,
+          "sha512": "faff84fb7ff74e6344bbabdd4897dabbe280f1b0803674fd3587e29ac637bd5a27df91cde06e4e93da73c1cf5c0604802c3b9f5c649552f002e5b1c2f26acc8c",
+          "sha256": "13fb855b98c3c92fc18efd6f3cda6357d14a29b1924e2c991d4bcb997d22e490",
+          "sha1": "124ec8697c2c44647e16732f9359ee619b309094",
+          "md5": "ee8b72e520dc711db0ca0c4c8c4e3c4e"
+        }
+      ]
+    }
+  ]
+}

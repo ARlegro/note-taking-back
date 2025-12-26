@@ -1,28 +1,17 @@
 package prac.demonote.domain.note.model;
 
-import static jakarta.persistence.GenerationType.*;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
 
 @Entity
-@Table(name = "note")
+@Table(name = "notes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 @Getter
-public class Note {
-
-  @Id @GeneratedValue(strategy = UUID)
-  private UUID id;
+public class Note extends BaseTimeWithUpdateEntity {
 
   private String title;
   private String content;

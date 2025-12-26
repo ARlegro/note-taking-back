@@ -1,0 +1,139 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.springframework.boot",
+    "module": "spring-boot-restclient",
+    "version": "4.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.2.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-http-client",
+          "version": {
+            "requires": "4.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-restclient-4.0.0.jar",
+          "url": "spring-boot-restclient-4.0.0.jar",
+          "size": 48562,
+          "sha512": "0a6bff983ae94fd82691ebbc7bb0324428eca0f8be42a770047f9acaa7bfa1a352b99b27a1617cc197bb12b79e9b396fc5ed44a360e8f199b5d204375619d285",
+          "sha256": "c8d8cde9fdc1f10fb614509da361ffecb1a84d664f5600affbd60d42ce1be610",
+          "sha1": "f5af1b64f7efcaa2987327ac5f6c06e64e84eda5",
+          "md5": "ab3cff00413763f9180c6680b964f1b1"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-http-converter",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-http-client",
+          "version": {
+            "requires": "4.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "spring-boot-restclient-4.0.0.jar",
+          "url": "spring-boot-restclient-4.0.0.jar",
+          "size": 48562,
+          "sha512": "0a6bff983ae94fd82691ebbc7bb0324428eca0f8be42a770047f9acaa7bfa1a352b99b27a1617cc197bb12b79e9b396fc5ed44a360e8f199b5d204375619d285",
+          "sha256": "c8d8cde9fdc1f10fb614509da361ffecb1a84d664f5600affbd60d42ce1be610",
+          "sha1": "f5af1b64f7efcaa2987327ac5f6c06e64e84eda5",
+          "md5": "ab3cff00413763f9180c6680b964f1b1"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-restclient-4.0.0-javadoc.jar",
+          "url": "spring-boot-restclient-4.0.0-javadoc.jar",
+          "size": 4219884,
+          "sha512": "ede5ae20ef9afe6934b3bbc7394be6f70d53a4ebd70e531624b9e8b51aa46a4af250e8b7bb051aaf2868f5235b27fb749142f43c14ddf30c1f00a3e48d99cd2c",
+          "sha256": "081f8ece01dd2e5c5f0f368e3b3ac28eba242b3e1e5ad2c78d1d9f94c888b7e4",
+          "sha1": "fa89fd967858f2f6d77a250c901ae41163b1324b",
+          "md5": "6ea0216dd4b0c50d6b4ed95ff1e24e70"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "spring-boot-restclient-4.0.0-sources.jar",
+          "url": "spring-boot-restclient-4.0.0-sources.jar",
+          "size": 40977,
+          "sha512": "434e3d9f81f8159d2cc30933c2923712c6f510d2d5f2bfc382f34e71138142247527e80b290fd16db764409a81f1a897f5f1ec6a6333af36fdd5705545e6874b",
+          "sha256": "a99a75b95370528eb9216bbef5dfe79226a0ba3d5407dca241937bd91b519df7",
+          "sha1": "92c8f53a2bc5dcbd1afd5e89d467fa829a3205b8",
+          "md5": "0ab7aa40c8ecebf739a7e5c9c504c5e4"
+        }
+      ]
+    }
+  ]
+}
