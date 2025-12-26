@@ -136,6 +136,9 @@ fabric.properties
 *.tar.gz
 *.rar
 
+# 
+src/main/generated/
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
@@ -217,5 +220,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# End of https://www.toptal.com/developers/gitignore/api/intellij,visualstudiocode,java,macos,windows
+# End of https://www.toptal.com/developers/gitignore/api/java,windows,linux
