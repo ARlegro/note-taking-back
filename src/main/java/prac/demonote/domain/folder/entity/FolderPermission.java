@@ -1,19 +1,17 @@
-package prac.demonote.domain.note.model;
+package prac.demonote.domain.folder.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import java.util.UUID;
 import lombok.Getter;
 import prac.demonote.common.PermissionType;
 import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
 
 @Entity
-@Table(name = "note_permissions")
+@Table(name = "folder_permissions")
 @Getter
-public class NotePermission extends BaseTimeWithUpdateEntity {
+public class FolderPermission extends BaseTimeWithUpdateEntity {
 
-  private UUID noteId;
-  private UUID granteeId; // 허가 받은 사람
+  @Column(nullable = false)
   private PermissionType permissionType;
-
 }

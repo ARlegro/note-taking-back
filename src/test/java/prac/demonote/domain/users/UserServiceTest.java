@@ -10,6 +10,7 @@ import prac.demonote.domain.users.dto.UserResponse;
 
 import java.util.Optional;
 import java.util.UUID;
+import prac.demonote.domain.users.service.UserServiceImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

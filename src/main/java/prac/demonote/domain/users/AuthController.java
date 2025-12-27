@@ -1,12 +1,15 @@
-package prac.demonote.domain.folder;
+package prac.demonote.domain.users;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import prac.demonote.domain.users.service.AuthServiceImpl;
 
 @RestController
-@RequestMapping("/api/folders")
 @RequiredArgsConstructor
-public class FolderController {
+@RequestMapping("/api/auth")
+public class AuthController {
+
+  private final AuthServiceImpl authService;
 
 }

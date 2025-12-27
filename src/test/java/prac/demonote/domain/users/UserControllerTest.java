@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
+import prac.demonote.domain.users.service.UserService;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.UUID;
