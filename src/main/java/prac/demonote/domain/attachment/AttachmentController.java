@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import prac.demonote.domain.attachment.dto.AttachmentCreateResponseDTO;
 import prac.demonote.domain.attachment.dto.AttachmentResponseDTO;
-import prac.demonote.domain.attachment.model.Attachment;
 
 @Slf4j
 @RestController
@@ -24,8 +23,6 @@ import prac.demonote.domain.attachment.model.Attachment;
 public class AttachmentController {
 
   private final AttachmentFacade attachmentFacade;
-  private final AttachmentService attachmentService;
-  private final AttachmentMapper attachmentMapper;
 
   // todo : userId는 나중에 JWT에서 가져오기
   @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
@@ -40,10 +37,8 @@ public class AttachmentController {
   // todo : userId는 나중에 JWT에서 가져오기
   @PatchMapping("/{attachmentId}/upload-complete")
   public ResponseEntity<AttachmentResponseDTO> markAsUploaded(
-      @PathVariable UUID attachmentId,
-      @RequestParam("userId") UUID userId
-  ) {
-    Attachment attachment = attachmentService.markAsUploaded(attachmentId, userId);
-    return ResponseEntity.ok(attachmentMapper.toResponse(attachment));
+      @PathVariable UUID attachmentId) {
+    AttachmentResponseDTO response = attachmentFacade.markAsUploaded(attachmentId);
+    return ResponseEntity.ok(response);
   }
 }

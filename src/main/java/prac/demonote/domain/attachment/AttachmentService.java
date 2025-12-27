@@ -23,13 +23,13 @@ public class AttachmentService {
   }
 
   @Transactional
-  public Attachment markAsUploaded(UUID attachmentId, UUID userId) {
+  public Attachment markAsUploaded(UUID attachmentId) {
 
-    Attachment attachment = attachmentRepository.findByIdAndOwnerId(attachmentId, userId)
-        .orElseThrow(() -> new AttachmentNotFoundException(
-            "Attachment not found with id: " + attachmentId + " and userId: " + userId));
+    Attachment attachment = attachmentRepository.findById(attachmentId)
+        .orElseThrow(
+            () -> new AttachmentNotFoundException("Attachment not found with id: " + attachmentId));
 
     attachment.markAsUploaded();
-    return attachmentRepository.save(attachment);
+    return attachment;
   }
 }

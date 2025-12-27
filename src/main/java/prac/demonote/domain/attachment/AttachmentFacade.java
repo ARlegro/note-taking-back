@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import prac.demonote.domain.attachment.dto.AttachmentCreateResponseDTO;
+import prac.demonote.domain.attachment.dto.AttachmentResponseDTO;
 import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
 import prac.demonote.domain.attachment.model.Attachment;
 import prac.demonote.domain.attachment.model.FileMetadata;
 import prac.demonote.domain.attachment.storage.StorageStrategy;
 import prac.demonote.domain.attachment.util.FileUtils;
-import prac.demonote.domain.note.NoteRepository;
 import prac.demonote.domain.users.User;
 import prac.demonote.domain.users.UserRepository;
 
@@ -22,11 +22,11 @@ import prac.demonote.domain.users.UserRepository;
 public class AttachmentFacade {
 
   private final StorageStrategy storageStrategy;
-  private final NoteRepository noteRepository;
   private final AttachmentService attachmentService;
   private final UserRepository userRepository;
-  private String uploadPath;
+  private final AttachmentMapper attachmentMapper;
 
+  // 초반 테스트 용
   @Transactional()
   public String save(MultipartFile attachment, UUID noteId) {
     /**
@@ -77,5 +77,10 @@ public class AttachmentFacade {
         presignedUrlResponse.key(),
         presignedUrlResponse.expiration()
     );
+  }
+
+  public AttachmentResponseDTO markAsUploaded(UUID attachmentId){
+    Attachment attachment = attachmentService.markAsUploaded(attachmentId);
+    return  attachmentMapper.toResponse(attachment);
   }
 }
