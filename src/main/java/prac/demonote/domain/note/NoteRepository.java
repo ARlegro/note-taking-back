@@ -15,4 +15,8 @@ public interface NoteRepository extends JpaRepository<Note, UUID> {
   // @Query("SELECT n FROM notes n WHERE n.id = :noteId AND n.owner.id = :ownerId")
   @Query("SELECT n FROM Note n WHERE n.id = :noteId AND  n.owner.id = :ownerId")
   Optional<Note> findByIdAndOwnerId(UUID noteId, UUID ownerId);
+
+  // 연습용 쿼리
+  @Query("SELECT (count(n) > 0 ) FROM Note n where n.id = :noteId AND n.owner.id = :ownerId")
+  boolean existsByIdAndOwnerId(UUID noteId, UUID ownerId);
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import prac.demonote.domain.attachment.dto.HealthCheckResponseDTO;
+import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
 
 @Slf4j
 @RestController
@@ -27,13 +28,24 @@ public class AttachmentController {
     return ResponseEntity.ok().body(new HealthCheckResponseDTO("좋았어"));
   }
 
+//  @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
+//  public ResponseEntity<String> uploadAttachment(
+//      @RequestParam("attachment") MultipartFile file,
+//      @RequestParam("noteId") UUID noteId
+//  ) {
+//    log.info("uploadAttachment Controller");
+//    String fileKey = attachmentFacade.save(file, noteId);
+//    return ResponseEntity.ok(fileKey);
+//  }
+
+  // todo : userId나중에 jwt용으로
   @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<String> uploadAttachment(
+  public ResponseEntity<PresignedUrlResponse> getPresignedUrl(
       @RequestParam("attachment") MultipartFile file,
-      @RequestParam("noteId") UUID noteId
+      @RequestParam("noteId") UUID noteId,
+      @RequestParam("userId") UUID userId
   ) {
-    log.info("uploadAttachment Controller");
-    String fileKey = attachmentFacade.save(file, noteId);
-    return ResponseEntity.ok(fileKey);
+    PresignedUrlResponse response = attachmentFacade.getPresignedUrl(file, noteId, userId);
+    return ResponseEntity.ok(response);
   }
 }
