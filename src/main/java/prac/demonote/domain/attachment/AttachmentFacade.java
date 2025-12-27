@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import prac.demonote.domain.attachment.exception.InvalidAttachmentException;
 import prac.demonote.domain.attachment.storage.StorageStrategy;
+import prac.demonote.domain.note.NoteRepository;
 
 @Slf4j
 @Service
@@ -17,12 +18,13 @@ import prac.demonote.domain.attachment.storage.StorageStrategy;
 public class AttachmentFacade {
 
   private final StorageStrategy storageStrategy;
+  private final NoteRepository noteRepository;
   private String uploadPath;
   private static final Set<String> ALLOWED_EXTENSIONS =
       Set.of("png", "jpg", "jpeg", "gif", "pdf");
 
   @Transactional()
-  public void save(MultipartFile attachment, UUID noteId) {
+  public String save(MultipartFile attachment, UUID noteId) {
     /**
      * 1. 검증
      * 2. 스토리지에 저장
@@ -33,6 +35,15 @@ public class AttachmentFacade {
     String fileKey = storageStrategy.save(attachment, noteId.toString());
     log.info("fileKey : {}", fileKey);
 
+    // todo : 메타데이터 저장 (이건 설계 자세히 나오면 ㄱ)
+
+    return fileKey;
+  }
+
+  // note_id가
+  public void getPresignedUrl(MultipartFile attachment, UUID noteId){
+
+    noteRepository.findById(noteId);
   }
 
   /**

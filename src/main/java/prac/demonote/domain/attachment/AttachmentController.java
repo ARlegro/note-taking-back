@@ -28,12 +28,12 @@ public class AttachmentController {
   }
 
   @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Void> uploadAttachment(
+  public ResponseEntity<String> uploadAttachment(
       @RequestParam("attachment") MultipartFile file,
       @RequestParam("noteId") UUID noteId
   ) {
-    log.info("컨트롤러 통과");
-    attachmentFacade.save(file, noteId);
-    return ResponseEntity.ok().build();
+    log.info("uploadAttachment Controller");
+    String fileKey = attachmentFacade.save(file, noteId);
+    return ResponseEntity.ok(fileKey);
   }
 }
