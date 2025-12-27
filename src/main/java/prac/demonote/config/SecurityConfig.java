@@ -41,7 +41,9 @@ public class SecurityConfig {
 
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/users/login").permitAll()
-            .anyRequest().authenticated()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().permitAll() // 임시
+            //.anyRequest().authenticated()
         )
 
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -61,7 +63,7 @@ public class SecurityConfig {
     // configuration.setAllowedOrigins(allowedOrigins); 나중에 쓸 거
     configuration.setAllowedOriginPatterns(allowedOrigins);
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // front에서 읽게 해주려는, preflight땜에 content-type도
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setExposedHeaders(List.of("Authorization"));
     configuration.setAllowCredentials(false); // 쿠키,세션 인증 안하니까 false (쿠키/세션을 자동으로 포함해서 보낼지 여부)
     configuration.setMaxAge(3600L);

@@ -17,6 +17,7 @@
 
 # Generated files
 .idea/**/contentModel.xml
+.src
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
@@ -35,7 +36,8 @@
 .idea
 build.*
 build/
-
+src/main/generated/
+out/
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,

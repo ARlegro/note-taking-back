@@ -1,24 +1,55 @@
 package prac.demonote.domain.attachment.model;
 
-import static jakarta.persistence.GenerationType.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import prac.demonote.common.entity.BaseTimeEntity;
+import prac.demonote.domain.users.User;
 
 @Entity
 @Table(name = "attachments")
 @Getter
-public class Attachment {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Attachment extends BaseTimeEntity {
 
-  @Id
-  @GeneratedValue(strategy = UUID)
-  @Column(name = "id")
-  private UUID id;
-  private String fileName;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "owner_id", nullable = false)
+  private User owner;
 
+  @Column(nullable = false)
+  private String originalName;
+
+  @Column(nullable = false)
+  private String storedName;
+
+  @Column(nullable = false)
+  private long fileSize;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private AttachmentStatus status;
+
+  @Column(nullable = false)
+  private String contentType;
+
+  public Attachment(User owner, FileMetadata metadata, String storedName) {
+    this.owner = owner;
+    this.originalName = metadata.originalName();
+    this.storedName = storedName;
+    this.fileSize = metadata.size();
+    this.contentType = metadata.contentType();
+    this.status = AttachmentStatus.PENDING;
+  }
+
+  public void markAsUploaded() {
+    this.status = AttachmentStatus.UPLOADED;
+  }
 }
