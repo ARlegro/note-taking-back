@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import prac.demonote.domain.attachment.dto.AttachmentCreateResponseDTO;
 import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
 import prac.demonote.domain.attachment.model.Attachment;
+import prac.demonote.domain.attachment.model.FileMetadata;
 import prac.demonote.domain.attachment.storage.StorageStrategy;
 import prac.demonote.domain.attachment.util.FileUtils;
 import prac.demonote.domain.note.NoteRepository;
@@ -48,27 +49,28 @@ public class AttachmentFacade {
     // 1. 파일 검증
     FileUtils.validateMultipartFile(attachment);
 
-    // 2. User 조회
+    // 2. 파일 메타데이터 추출
+    FileMetadata metadata = FileMetadata.from(attachment);
+
+    // 3. User 조회
     User owner = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-    // 3. PresignedURL 생성
+    // 4. PresignedURL 생성
     PresignedUrlResponse presignedUrlResponse = storageStrategy.generatePresignedUrl(
         userId.toString(),
-        attachment.getOriginalFilename(),
-        attachment.getContentType()
+        metadata.originalName(),
+        metadata.contentType()
     );
 
-    // 4. Attachment 메타데이터 저장 (PENDING 상태)
+    // 5. Attachment 메타데이터 저장 (PENDING 상태)
     Attachment savedAttachment = attachmentService.createPendingAttachment(
         owner,
-        attachment.getOriginalFilename(),
-        presignedUrlResponse.key(),
-        attachment.getSize(),
-        attachment.getContentType()
+        metadata,
+        presignedUrlResponse.key()
     );
 
-    // 5. 응답 생성
+    // 6. 응답 생성
     return new AttachmentCreateResponseDTO(
         savedAttachment.getId(),
         presignedUrlResponse.url(),

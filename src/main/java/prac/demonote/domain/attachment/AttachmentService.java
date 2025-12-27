@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prac.demonote.domain.attachment.exception.AttachmentNotFoundException;
 import prac.demonote.domain.attachment.model.Attachment;
+import prac.demonote.domain.attachment.model.FileMetadata;
 import prac.demonote.domain.users.User;
 
 @Service
@@ -16,9 +17,8 @@ public class AttachmentService {
   private final AttachmentRepository attachmentRepository;
 
   @Transactional
-  public Attachment createPendingAttachment(User owner, String originalName, String storedName,
-      long fileSize, String contentType) {
-    Attachment attachment = new Attachment(owner, originalName, storedName, fileSize, contentType);
+  public Attachment createPendingAttachment(User owner, FileMetadata metadata, String storedName) {
+    Attachment attachment = new Attachment(owner, metadata, storedName);
     return attachmentRepository.save(attachment);
   }
 

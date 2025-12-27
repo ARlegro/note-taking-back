@@ -19,6 +19,7 @@ import prac.demonote.domain.attachment.exception.AttachmentNotFoundException;
 import prac.demonote.domain.attachment.exception.UnauthorizedAttachmentAccessException;
 import prac.demonote.domain.attachment.model.Attachment;
 import prac.demonote.domain.attachment.model.AttachmentStatus;
+import prac.demonote.domain.attachment.model.FileMetadata;
 import prac.demonote.domain.users.User;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,24 +36,21 @@ class AttachmentServiceTest {
   void givenValidData_whenCreatePendingAttachment_thenReturnsSavedAttachment() {
     // given
     User owner = new User("test@example.com", "google", "google-id-123");
-    String originalName = "test.txt";
+    FileMetadata metadata = new FileMetadata("test.txt", 1024L, "text/plain");
     String storedName = "attachments/user-id/test.txt";
-    long fileSize = 1024L;
-    String contentType = "text/plain";
 
-    Attachment attachment = new Attachment(owner, originalName, storedName, fileSize, contentType);
+    Attachment attachment = new Attachment(owner, metadata, storedName);
     when(attachmentRepository.save(any(Attachment.class))).thenReturn(attachment);
 
     // when
-    Attachment result = attachmentService.createPendingAttachment(owner, originalName, storedName,
-        fileSize, contentType);
+    Attachment result = attachmentService.createPendingAttachment(owner, metadata, storedName);
 
     // then
     assertThat(result).isNotNull();
-    assertThat(result.getOriginalName()).isEqualTo(originalName);
+    assertThat(result.getOriginalName()).isEqualTo(metadata.originalName());
     assertThat(result.getStoredName()).isEqualTo(storedName);
-    assertThat(result.getFileSize()).isEqualTo(fileSize);
-    assertThat(result.getContentType()).isEqualTo(contentType);
+    assertThat(result.getFileSize()).isEqualTo(metadata.size());
+    assertThat(result.getContentType()).isEqualTo(metadata.contentType());
     assertThat(result.getStatus()).isEqualTo(AttachmentStatus.PENDING);
     verify(attachmentRepository).save(any(Attachment.class));
   }
@@ -64,13 +62,12 @@ class AttachmentServiceTest {
     UUID attachmentId = UUID.randomUUID();
     UUID userId = UUID.randomUUID();
 
-    User owner = mock(User.class);
-    when(owner.getId()).thenReturn(userId);
+    User owner = new User("test@example.com", "google", "google-id-123");
+    FileMetadata metadata = new FileMetadata("test.txt", 1024L, "text/plain");
+    Attachment attachment = new Attachment(owner, metadata, "attachments/user-id/test.txt");
 
-    Attachment attachment = new Attachment(owner, "test.txt",
-        "attachments/user-id/test.txt", 1024L, "text/plain");
-
-    when(attachmentRepository.findById(attachmentId)).thenReturn(Optional.of(attachment));
+    when(attachmentRepository.findByIdAndOwnerId(attachmentId, userId))
+        .thenReturn(Optional.of(attachment));
     when(attachmentRepository.save(any(Attachment.class))).thenReturn(attachment);
 
     // when
@@ -78,7 +75,7 @@ class AttachmentServiceTest {
 
     // then
     assertThat(result.getStatus()).isEqualTo(AttachmentStatus.UPLOADED);
-    verify(attachmentRepository).findById(attachmentId);
+    verify(attachmentRepository).findByIdAndOwnerId(attachmentId, userId);
     verify(attachmentRepository).save(attachment);
   }
 
@@ -89,7 +86,8 @@ class AttachmentServiceTest {
     UUID attachmentId = UUID.randomUUID();
     UUID userId = UUID.randomUUID();
 
-    when(attachmentRepository.findById(attachmentId)).thenReturn(Optional.empty());
+    when(attachmentRepository.findByIdAndOwnerId(attachmentId, userId))
+        .thenReturn(Optional.empty());
 
     // when & then
     assertThatThrownBy(() -> attachmentService.markAsUploaded(attachmentId, userId))
@@ -97,23 +95,17 @@ class AttachmentServiceTest {
   }
 
   @Test
-  @DisplayName("givenDifferentOwner_whenMarkAsUploaded_thenThrowsUnauthorizedAttachmentAccessException")
-  void givenDifferentOwner_whenMarkAsUploaded_thenThrowsUnauthorizedAttachmentAccessException() {
+  @DisplayName("givenDifferentOwner_whenMarkAsUploaded_thenThrowsAttachmentNotFoundException")
+  void givenDifferentOwner_whenMarkAsUploaded_thenThrowsAttachmentNotFoundException() {
     // given
     UUID attachmentId = UUID.randomUUID();
-    UUID ownerId = UUID.randomUUID();
     UUID differentUserId = UUID.randomUUID();
 
-    User owner = mock(User.class);
-    when(owner.getId()).thenReturn(ownerId);
-
-    Attachment attachment = new Attachment(owner, "test.txt",
-        "attachments/user-id/test.txt", 1024L, "text/plain");
-
-    when(attachmentRepository.findById(attachmentId)).thenReturn(Optional.of(attachment));
+    when(attachmentRepository.findByIdAndOwnerId(attachmentId, differentUserId))
+        .thenReturn(Optional.empty());
 
     // when & then
     assertThatThrownBy(() -> attachmentService.markAsUploaded(attachmentId, differentUserId))
-        .isInstanceOf(UnauthorizedAttachmentAccessException.class);
+        .isInstanceOf(AttachmentNotFoundException.class);
   }
 }

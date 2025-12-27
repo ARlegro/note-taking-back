@@ -40,13 +40,12 @@ public class Attachment extends BaseTimeEntity {
   @Column(nullable = false)
   private String contentType;
 
-  public Attachment(User owner, String originalName, String storedName,
-      long fileSize, String contentType) {
+  public Attachment(User owner, FileMetadata metadata, String storedName) {
     this.owner = owner;
-    this.originalName = originalName;
+    this.originalName = metadata.originalName();
     this.storedName = storedName;
-    this.fileSize = fileSize;
-    this.contentType = contentType;
+    this.fileSize = metadata.size();
+    this.contentType = metadata.contentType();
     this.status = AttachmentStatus.PENDING;
   }
 
