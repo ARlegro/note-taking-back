@@ -43,4 +43,11 @@ public final class FileUtils {
         file.getSize(),
         file.getContentType());
    }
+
+  public static String normalizeFileName(String fileName) {
+    if (!StringUtils.hasText(fileName)) {
+      throw new InvalidAttachmentException("파일명이 유효하지 않습니다");
+    }
+    return fileName.trim().replaceAll("\\s+", "_");
+  }
 }

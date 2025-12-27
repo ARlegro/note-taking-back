@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
+import prac.demonote.global.s3.S3Properties;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
@@ -17,6 +18,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 public class S3StorageStrategy implements StorageStrategy {
 
   private final S3Presigner s3Presigner;
+  private final S3Properties s3Properties;
 
   @Override
   public String save(MultipartFile file, String userId) {
@@ -28,7 +30,7 @@ public class S3StorageStrategy implements StorageStrategy {
     String key = generateKey(userId, fileName);
 
     PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-        .bucket("demo-note-bucket")
+        .bucket(s3Properties.bucket())
         .key(key)
         .contentType(contentType)
         .build();
@@ -48,7 +50,7 @@ public class S3StorageStrategy implements StorageStrategy {
   }
 
   private String generateKey(String userId, String fileName) {
-    String sanitizedFileName = fileName.replaceAll("[./\\\\]", "_");
-    return String.format("attachments/%s/%s", userId, sanitizedFileName);
+    System.out.println("fileName = " + fileName);
+    return String.format("attachments/%s/%s", userId, fileName);
   }
 }

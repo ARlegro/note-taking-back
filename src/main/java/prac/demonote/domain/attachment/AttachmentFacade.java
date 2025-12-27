@@ -57,9 +57,10 @@ public class AttachmentFacade {
         .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
     // 4. PresignedURL 생성
+    String normalizedFileName = FileUtils.normalizeFileName(metadata.originalName());
     PresignedUrlResponse presignedUrlResponse = storageStrategy.generatePresignedUrl(
         userId.toString(),
-        metadata.originalName(),
+        normalizedFileName,
         metadata.contentType()
     );
 
