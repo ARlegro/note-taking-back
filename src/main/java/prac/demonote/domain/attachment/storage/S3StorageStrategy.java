@@ -1,6 +1,5 @@
 package prac.demonote.domain.attachment.storage;
 
-
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,8 +20,6 @@ public class S3StorageStrategy implements StorageStrategy {
 
   @Override
   public String save(MultipartFile file, String userId) {
-
-
 
     return "";
   }
@@ -47,11 +44,11 @@ public class S3StorageStrategy implements StorageStrategy {
     return new PresignedUrlResponse(
         presignedRequest.url().toString(),
         key,
-        presignedRequest.expiration()
-    );
+        presignedRequest.expiration());
   }
 
   private String generateKey(String userId, String fileName) {
-    return String.format("attachments/%s/%s", userId, fileName);
+    String sanitizedFileName = fileName.replaceAll("[./\\\\]", "_");
+    return String.format("attachments/%s/%s", userId, sanitizedFileName);
   }
 }

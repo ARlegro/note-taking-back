@@ -1,6 +1,5 @@
 package prac.demonote.config;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +19,10 @@ public class S3Config {
   public S3Presigner s3Presigner() {
     return S3Presigner.builder()
         .region(Region.of(s3Properties.region()))
+        // todo : prod 단계에서는 이거 지우고 환경변수로 ㄱ
         .credentialsProvider(
             StaticCredentialsProvider.create(
-                AwsBasicCredentials.create(s3Properties.accesskey(), s3Properties.secretKey())
-            ))
+                AwsBasicCredentials.create(s3Properties.accesskey(), s3Properties.secretKey())))
         .build();
   }
 }

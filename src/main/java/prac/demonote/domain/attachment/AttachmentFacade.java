@@ -50,7 +50,7 @@ public class AttachmentFacade {
     FileUtils.validateMultipartFile(attachment);
 
     // 2. 파일 메타데이터 추출
-    FileMetadata metadata = FileMetadata.from(attachment);
+    FileMetadata metadata = FileUtils.toFileMetadata(attachment);
 
     // 3. User 조회
     User owner = userRepository.findById(userId)
