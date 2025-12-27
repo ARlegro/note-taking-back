@@ -6,10 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import prac.demonote.domain.attachment.dto.AttachmentCreateResponseDTO;
 import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
+import prac.demonote.domain.attachment.model.Attachment;
 import prac.demonote.domain.attachment.storage.StorageStrategy;
 import prac.demonote.domain.attachment.util.FileUtils;
 import prac.demonote.domain.note.NoteRepository;
+import prac.demonote.domain.users.User;
+import prac.demonote.domain.users.UserRepository;
 
 @Slf4j
 @Service
@@ -18,6 +22,8 @@ public class AttachmentFacade {
 
   private final StorageStrategy storageStrategy;
   private final NoteRepository noteRepository;
+  private final AttachmentService attachmentService;
+  private final UserRepository userRepository;
   private String uploadPath;
 
   @Transactional()
@@ -37,19 +43,37 @@ public class AttachmentFacade {
     return fileKey;
   }
 
-  // note_id가
-
-  /**
-   *
-   */
-  public PresignedUrlResponse getPresignedUrl(MultipartFile attachment, UUID noteId, UUID userId) {
+  @Transactional
+  public AttachmentCreateResponseDTO getPresignedUrl(MultipartFile attachment, UUID userId) {
+    // 1. 파일 검증
     FileUtils.validateMultipartFile(attachment);
-//    if (!noteRepository.existsByIdAndOwnerId(noteId, userId)) {
-//      throw new RuntimeException("Note not found");
-//    }
 
-    System.out.println("attachment.getOriginalFilename() = " + attachment.getOriginalFilename());
-    
-    return storageStrategy.generatePresignedUrl(userId.toString(), attachment.getOriginalFilename(), attachment.getContentType());
+    // 2. User 조회
+    User owner = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+    // 3. PresignedURL 생성
+    PresignedUrlResponse presignedUrlResponse = storageStrategy.generatePresignedUrl(
+        userId.toString(),
+        attachment.getOriginalFilename(),
+        attachment.getContentType()
+    );
+
+    // 4. Attachment 메타데이터 저장 (PENDING 상태)
+    Attachment savedAttachment = attachmentService.createPendingAttachment(
+        owner,
+        attachment.getOriginalFilename(),
+        presignedUrlResponse.key(),
+        attachment.getSize(),
+        attachment.getContentType()
+    );
+
+    // 5. 응답 생성
+    return new AttachmentCreateResponseDTO(
+        savedAttachment.getId(),
+        presignedUrlResponse.url(),
+        presignedUrlResponse.key(),
+        presignedUrlResponse.expiration()
+    );
   }
 }

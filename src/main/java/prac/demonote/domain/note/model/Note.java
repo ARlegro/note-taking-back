@@ -1,6 +1,7 @@
 package prac.demonote.domain.note.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -18,7 +19,10 @@ import prac.demonote.domain.users.User;
 @Getter
 public class Note extends BaseTimeWithUpdateEntity {
 
+  @Column(nullable = false)
   private String title;
+
+  @Column(nullable = false)
   private String content;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

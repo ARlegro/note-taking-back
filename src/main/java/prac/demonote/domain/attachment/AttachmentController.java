@@ -6,14 +6,16 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import prac.demonote.domain.attachment.dto.HealthCheckResponseDTO;
-import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
+import prac.demonote.domain.attachment.dto.AttachmentCreateResponseDTO;
+import prac.demonote.domain.attachment.dto.AttachmentResponseDTO;
+import prac.demonote.domain.attachment.model.Attachment;
 
 @Slf4j
 @RestController
@@ -22,30 +24,26 @@ import prac.demonote.domain.attachment.dto.PresignedUrlResponse;
 public class AttachmentController {
 
   private final AttachmentFacade attachmentFacade;
+  private final AttachmentService attachmentService;
+  private final AttachmentMapper attachmentMapper;
 
-  @GetMapping("")
-  public ResponseEntity<HealthCheckResponseDTO> healthcheck() {
-    return ResponseEntity.ok().body(new HealthCheckResponseDTO("좋았어"));
-  }
-
-//  @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
-//  public ResponseEntity<String> uploadAttachment(
-//      @RequestParam("attachment") MultipartFile file,
-//      @RequestParam("noteId") UUID noteId
-//  ) {
-//    log.info("uploadAttachment Controller");
-//    String fileKey = attachmentFacade.save(file, noteId);
-//    return ResponseEntity.ok(fileKey);
-//  }
-
-  // todo : userId나중에 jwt용으로
+  // todo : userId는 나중에 JWT에서 가져오기
   @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<PresignedUrlResponse> getPresignedUrl(
+  public ResponseEntity<AttachmentCreateResponseDTO> createPresignedUrl(
       @RequestParam("attachment") MultipartFile file,
-      @RequestParam("noteId") UUID noteId,
       @RequestParam("userId") UUID userId
   ) {
-    PresignedUrlResponse response = attachmentFacade.getPresignedUrl(file, noteId, userId);
+    AttachmentCreateResponseDTO response = attachmentFacade.getPresignedUrl(file, userId);
     return ResponseEntity.ok(response);
+  }
+
+  // todo : userId는 나중에 JWT에서 가져오기
+  @PatchMapping("/{attachmentId}/upload-complete")
+  public ResponseEntity<AttachmentResponseDTO> markAsUploaded(
+      @PathVariable UUID attachmentId,
+      @RequestParam("userId") UUID userId
+  ) {
+    Attachment attachment = attachmentService.markAsUploaded(attachmentId, userId);
+    return ResponseEntity.ok(attachmentMapper.toResponse(attachment));
   }
 }
