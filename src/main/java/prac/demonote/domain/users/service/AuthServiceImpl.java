@@ -89,13 +89,13 @@ public class AuthServiceImpl implements AuthService {
 
     private User findOrCreateUser(OAuth2UserInfo userInfo) {
         return userRepository.findByProviderAndProviderId(
-                userInfo.getProvider().getRegistrationId(),
+                userInfo.getProvider(),
                 userInfo.getProviderId()
             )
             .orElseGet(() -> userRepository.save(
                 new User(
                     userInfo.getEmail(),
-                    userInfo.getProvider().getRegistrationId(),
+                    userInfo.getProvider(),
                     userInfo.getProviderId()
                 )
             ));

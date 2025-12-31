@@ -12,11 +12,13 @@ import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import prac.demonote.domain.note.model.Note;
 import prac.demonote.domain.users.User;
 import prac.demonote.domain.users.UserRepository;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
+import prac.demonote.support.PostgresTestContainer;
 
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-class NoteRepositoryTest {
+class NoteRepositoryTest extends PostgresTestContainer {
 
   @Autowired
   private NoteRepository noteRepository;
@@ -51,7 +53,7 @@ class NoteRepositoryTest {
   }
 
   private User createTestUser(){
-    User user = new User("test@example.com", "GOOGLE", "Provider-id");
+    User user = new User("test@example.com", OAuth2Provider.GOOGLE, "Provider-id");
     User savedUser = userRepository.save(user);
 
     assertThat(savedUser).isNotNull();

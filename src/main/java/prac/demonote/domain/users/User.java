@@ -5,10 +5,13 @@ import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 
 
 @Entity
@@ -17,21 +20,17 @@ import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
 @NoArgsConstructor(access = PROTECTED)
 public class User extends BaseTimeWithUpdateEntity {
 
-  @Column(nullable = false)
+  @Column
   private String email;
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private String provider;
+  private OAuth2Provider provider;
 
   @Column(nullable = false)
   private String providerId;
 
-  public User(String email) {
-    this.email = email;
-  }
-
-  //@ConstructorProperties({"email", "provider", "providerId"})
-  public User(String email, String provider, String providerId) {
+  public User(String email, OAuth2Provider provider, String providerId) {
     this.email = email;
     this.provider = provider;
     this.providerId = providerId;

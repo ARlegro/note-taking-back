@@ -11,6 +11,8 @@ public class OAuth2UserInfoFactory {
         return switch (provider) {
             case GOOGLE -> new GoogleOAuth2UserInfo(attributes);
             case KAKAO -> new KakaoOAuth2UserInfo(attributes);
+            case APPLE -> new AppleOAuth2UserInfo(attributes);
+            case NAVER -> new NaverOAuth2UserInfo(attributes);
         };
     }
 }

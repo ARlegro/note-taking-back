@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 public enum OAuth2Provider {
     GOOGLE("google"),
-    KAKAO("kakao");
+    KAKAO("kakao"),
+    APPLE("apple"),
+    NAVER("naver");
 
     private final String registrationId;
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 import prac.demonote.support.PostgresTestContainer;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ class UserRepositoryTest extends PostgresTestContainer {
     void 사용자를_저장하면_식별자와_필드가_저장된다() {
         // given
         String email = "user@example.com";
-        String provider = "GOOGLE";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "provider-id";
         User user = new User(email, provider, providerId);
 
@@ -39,7 +40,7 @@ class UserRepositoryTest extends PostgresTestContainer {
     void 사용자_ID로_조회하면_사용자가_반환된다() {
         // given
         String email = "find-id@example.com";
-        User savedUser = userRepository.save(new User(email, "GITHUB", "gh-123"));
+        User savedUser = userRepository.save(new User(email, OAuth2Provider.GOOGLE, "gh-123"));
 
         // when
         Optional<User> result = userRepository.findById(savedUser.getId());
@@ -53,7 +54,7 @@ class UserRepositoryTest extends PostgresTestContainer {
     void 이메일로_조회하면_사용자가_반환된다() {
         // given
         String email = "find-email@example.com";
-        String provider = "KAKAO";
+        OAuth2Provider provider = OAuth2Provider.KAKAO;
         userRepository.save(new User(email, provider, "kakao-001"));
 
         // when
@@ -68,7 +69,7 @@ class UserRepositoryTest extends PostgresTestContainer {
     void provider와_providerId로_조회하면_사용자가_반환된다() {
         // given
         String email = "oauth@example.com";
-        String provider = "google";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "google-123456789";
         userRepository.save(new User(email, provider, providerId));
 
@@ -85,7 +86,7 @@ class UserRepositoryTest extends PostgresTestContainer {
     @Test
     void 존재하지_않는_provider와_providerId로_조회하면_빈_Optional이_반환된다() {
         // when
-        Optional<User> result = userRepository.findByProviderAndProviderId("google", "nonexistent-id");
+        Optional<User> result = userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "nonexistent-id");
 
         // then
         assertThat(result).isEmpty();

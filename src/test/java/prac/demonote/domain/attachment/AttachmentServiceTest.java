@@ -19,6 +19,7 @@ import prac.demonote.domain.attachment.model.Attachment;
 import prac.demonote.domain.attachment.model.AttachmentStatus;
 import prac.demonote.domain.attachment.model.FileMetadata;
 import prac.demonote.domain.users.User;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 
 @ExtendWith(MockitoExtension.class)
 class AttachmentServiceTest {
@@ -33,7 +34,7 @@ class AttachmentServiceTest {
   @DisplayName("첨부파일 생성 시 대기 상태로 저장된다")
   void 첨부파일_생성시_대기상태로_저장된다() {
     // given
-    User owner = new User("test@example.com", "google", "google-id-123");
+    User owner = new User("test@example.com", OAuth2Provider.GOOGLE, "google-id-123");
     FileMetadata metadata = new FileMetadata("test.txt", 1024L, "text/plain");
     String storedName = "attachments/user-id/test.txt";
 
@@ -59,7 +60,7 @@ class AttachmentServiceTest {
     // given
     UUID attachmentId = UUID.randomUUID();
 
-    User owner = new User("test@example.com", "google", "google-id-123");
+    User owner = new User("test@example.com", OAuth2Provider.GOOGLE, "google-id-123");
     FileMetadata metadata = new FileMetadata("test.txt", 1024L, "text/plain");
     Attachment attachment = new Attachment(owner, metadata, "attachments/user-id/test.txt");
 

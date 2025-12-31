@@ -86,13 +86,13 @@ class AuthServiceTest {
             "email", "test@gmail.com",
             "name", "Test User"
         ));
-        User user = new User("test@gmail.com", "google", "google-123");
-        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", "google", "google-123");
+        User user = new User("test@gmail.com", OAuth2Provider.GOOGLE, "google-123");
+        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", OAuth2Provider.GOOGLE, "google-123");
 
         when(stateService.validateAndConsume(state)).thenReturn(provider);
         when(oAuth2ClientService.exchangeCodeForToken(OAuth2Provider.GOOGLE, code)).thenReturn(tokenResponse);
         when(oAuth2ClientService.getUserInfo(OAuth2Provider.GOOGLE, "provider-access-token")).thenReturn(userInfo);
-        when(userRepository.findByProviderAndProviderId("google", "google-123")).thenReturn(Optional.empty());
+        when(userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "google-123")).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userMapper.toResponse(user)).thenReturn(userResponse);
         when(jwtProvider.createAccessToken(any(), eq("test@gmail.com"))).thenReturn("jwt-access-token");
@@ -122,14 +122,14 @@ class AuthServiceTest {
             "email", "new@gmail.com",
             "name", "New User"
         ));
-        User newUser = new User("new@gmail.com", "google", "new-user-id");
+        User newUser = new User("new@gmail.com", OAuth2Provider.GOOGLE, "new-user-id");
 
         when(stateService.validateAndConsume(state)).thenReturn(provider);
         when(oAuth2ClientService.exchangeCodeForToken(OAuth2Provider.GOOGLE, code)).thenReturn(tokenResponse);
         when(oAuth2ClientService.getUserInfo(OAuth2Provider.GOOGLE, "access-token")).thenReturn(userInfo);
-        when(userRepository.findByProviderAndProviderId("google", "new-user-id")).thenReturn(Optional.empty());
+        when(userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "new-user-id")).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(newUser);
-        when(userMapper.toResponse(any())).thenReturn(new UserResponse(UUID.randomUUID(), "new@gmail.com", "google", "new-user-id"));
+        when(userMapper.toResponse(any())).thenReturn(new UserResponse(UUID.randomUUID(), "new@gmail.com", OAuth2Provider.GOOGLE, "new-user-id"));
         when(jwtProvider.createAccessToken(any(), any())).thenReturn("access");
         when(jwtProvider.createRefreshToken(any(), any())).thenReturn("refresh");
 
@@ -156,13 +156,13 @@ class AuthServiceTest {
             "email", "existing@gmail.com",
             "name", "Existing User"
         ));
-        User existingUser = new User("existing@gmail.com", "google", "existing-user-id");
+        User existingUser = new User("existing@gmail.com", OAuth2Provider.GOOGLE, "existing-user-id");
 
         when(stateService.validateAndConsume(state)).thenReturn(provider);
         when(oAuth2ClientService.exchangeCodeForToken(OAuth2Provider.GOOGLE, code)).thenReturn(tokenResponse);
         when(oAuth2ClientService.getUserInfo(OAuth2Provider.GOOGLE, "access-token")).thenReturn(userInfo);
-        when(userRepository.findByProviderAndProviderId("google", "existing-user-id")).thenReturn(Optional.of(existingUser));
-        when(userMapper.toResponse(existingUser)).thenReturn(new UserResponse(existingUserId, "existing@gmail.com", "google", "existing-user-id"));
+        when(userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "existing-user-id")).thenReturn(Optional.of(existingUser));
+        when(userMapper.toResponse(existingUser)).thenReturn(new UserResponse(existingUserId, "existing@gmail.com", OAuth2Provider.GOOGLE, "existing-user-id"));
         when(jwtProvider.createAccessToken(any(), any())).thenReturn("access");
         when(jwtProvider.createRefreshToken(any(), any())).thenReturn("refresh");
 
@@ -178,8 +178,8 @@ class AuthServiceTest {
         // given
         String refreshToken = "valid-refresh-token";
         UUID userId = UUID.randomUUID();
-        User user = new User("test@gmail.com", "google", "google-123");
-        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", "google", "google-123");
+        User user = new User("test@gmail.com", OAuth2Provider.GOOGLE, "google-123");
+        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", OAuth2Provider.GOOGLE, "google-123");
 
         when(jwtProvider.isValidToken(refreshToken)).thenReturn(true);
         when(jwtProvider.getUserIdFromToken(refreshToken)).thenReturn(userId);

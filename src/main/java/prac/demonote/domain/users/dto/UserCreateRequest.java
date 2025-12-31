@@ -1,13 +1,14 @@
 package prac.demonote.domain.users.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 
 public record UserCreateRequest(
-    @NotBlank
     String email,
 
-    @NotBlank
-    String provider,
+    @NotNull
+    OAuth2Provider provider,
 
     @NotBlank
     String providerId) {

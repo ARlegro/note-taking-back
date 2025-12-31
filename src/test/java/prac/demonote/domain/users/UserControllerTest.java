@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
 import prac.demonote.domain.users.service.UserService;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.UUID;
@@ -44,7 +45,7 @@ class UserControllerTest {
         String endpoint = BASE_URL;
         UUID userId = UUID.randomUUID();
         String email = "new@example.com";
-        String provider = "GITHUB";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "gh-123";
         UserCreateRequest request = new UserCreateRequest(email, provider, providerId);
         UserResponse response = new UserResponse(userId, email, provider, providerId);
@@ -62,7 +63,7 @@ class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userId.toString()))
                 .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.provider").value(provider))
+                .andExpect(jsonPath("$.provider").value(provider.name()))
                 .andExpect(jsonPath("$.providerId").value(providerId));
 
         ArgumentCaptor<UserCreateRequest> captor = ArgumentCaptor.forClass(UserCreateRequest.class);
@@ -75,7 +76,7 @@ class UserControllerTest {
         String endpoint = BASE_URL + "/{userId}";
         UUID userId = UUID.randomUUID();
         String email = "user@example.com";
-        String provider = "GOOGLE";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "provider-id";
         UserResponse response = new UserResponse(userId, email, provider, providerId);
 
@@ -90,7 +91,7 @@ class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userId.toString()))
                 .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.provider").value(provider))
+                .andExpect(jsonPath("$.provider").value(provider.name()))
                 .andExpect(jsonPath("$.providerId").value(providerId));
     }
 

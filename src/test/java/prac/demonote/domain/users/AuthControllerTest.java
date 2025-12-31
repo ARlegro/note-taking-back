@@ -16,6 +16,7 @@ import prac.demonote.domain.users.dto.OAuth2AuthorizationRequest;
 import prac.demonote.domain.users.dto.RefreshTokenRequest;
 import prac.demonote.domain.users.dto.UserResponse;
 import prac.demonote.domain.users.service.AuthService;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 
 @ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
@@ -54,7 +55,7 @@ class AuthControllerTest {
         String state = "valid-state";
         UUID userId = UUID.randomUUID();
 
-        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", "google", "google-123");
+        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", OAuth2Provider.GOOGLE, "google-123");
         LoginResponse loginResponse = new LoginResponse("access-token", "refresh-token", userResponse);
 
         when(authService.processOAuth2Callback(provider, code, state))
@@ -76,7 +77,7 @@ class AuthControllerTest {
         // given
         UUID userId = UUID.randomUUID();
         RefreshTokenRequest request = new RefreshTokenRequest("valid-refresh-token");
-        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", "google", "google-123");
+        UserResponse userResponse = new UserResponse(userId, "test@gmail.com", OAuth2Provider.GOOGLE, "google-123");
         LoginResponse loginResponse = new LoginResponse("new-access-token", "new-refresh-token", userResponse);
 
         when(authService.refreshToken("valid-refresh-token"))

@@ -42,6 +42,7 @@ public class OAuth2ClientService {
     public OAuth2TokenResponse exchangeCodeForToken(OAuth2Provider provider, String code) {
         ClientRegistration registration = getClientRegistration(provider);
 
+        // OAuth2 Token Request는 기본 스펙이 application/x-www-form-urlencoded 형식 이라 쩔수 DTO대신 MultivalueMap으로
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", registration.getClientId());
@@ -94,7 +95,7 @@ public class OAuth2ClientService {
     private String resolveRedirectUri(ClientRegistration registration) {
         String redirectUri = registration.getRedirectUri();
         return redirectUri
-            .replace("{baseUrl}", "http://localhost:8080")
+            .replace("{baseUrl}", "http://localhost:8080") // todo 하드코딩 지우기
             .replace("{registrationId}", registration.getRegistrationId());
     }
 }

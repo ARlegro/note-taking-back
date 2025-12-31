@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.util.ReflectionTestUtils;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 import prac.demonote.support.PostgresTestContainer;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ class userTest extends PostgresTestContainer {
   @DisplayName("user는 BaseTimeWithUpdateEntity의 필드를 상속받아 접근할 수 있다")
   void user_상속_필드_접근_가능() {
     // given
-    User target = new User("icb1696@naver.com");
+    User target = new User("icb1696@naver.com", OAuth2Provider.NAVER, "naver-id-123");
     UUID id = UUID.randomUUID();
     LocalDateTime createdAt = LocalDateTime.now().minusDays(1);
     LocalDateTime updatedAt = LocalDateTime.now();
