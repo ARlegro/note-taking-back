@@ -40,10 +40,12 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(configurationSource()))
 
         .authorizeHttpRequests(auth -> auth
+            // OAuth2 인증 엔드포인트 허용
+            .requestMatchers("/api/auth/oauth2/**").permitAll()
+            .requestMatchers("/api/auth/refresh").permitAll()
             .requestMatchers("/api/users/login").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .anyRequest().permitAll() // 임시
-            //.anyRequest().authenticated()
+            .anyRequest().authenticated()
         )
 
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

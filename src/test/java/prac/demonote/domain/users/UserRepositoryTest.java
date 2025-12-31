@@ -63,4 +63,31 @@ class UserRepositoryTest extends PostgresTestContainer {
         assertThat(result).isPresent();
         assertThat(result.get().getProvider()).isEqualTo(provider);
     }
+
+    @Test
+    void provider와_providerId로_조회하면_사용자가_반환된다() {
+        // given
+        String email = "oauth@example.com";
+        String provider = "google";
+        String providerId = "google-123456789";
+        userRepository.save(new User(email, provider, providerId));
+
+        // when
+        Optional<User> result = userRepository.findByProviderAndProviderId(provider, providerId);
+
+        // then
+        assertThat(result).isPresent();
+        assertThat(result.get().getEmail()).isEqualTo(email);
+        assertThat(result.get().getProvider()).isEqualTo(provider);
+        assertThat(result.get().getProviderId()).isEqualTo(providerId);
+    }
+
+    @Test
+    void 존재하지_않는_provider와_providerId로_조회하면_빈_Optional이_반환된다() {
+        // when
+        Optional<User> result = userRepository.findByProviderAndProviderId("google", "nonexistent-id");
+
+        // then
+        assertThat(result).isEmpty();
+    }
 }
