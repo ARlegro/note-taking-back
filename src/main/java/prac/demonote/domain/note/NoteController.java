@@ -62,17 +62,6 @@ public class NoteController {
     return ResponseEntity.noContent().build();
   }
 
-  // 삭제 V2 - 삭제 시 미리보기 Pagination을 위한 노트도 가져오는 경우
-//  @DeleteMapping("/{noteId}")
-//  public ResponseEntity<NoteDeleteResponse> deleteNotesWithReplacement(
-//      @AuthenticationPrincipal CustomUserDetails user,
-//      @RequestBody NoteDeleteRequest request) {
-////    NoteDeleteResponse response = noteService.deleteNotesWithReplacement(user.getUserId(), request);
-////    return ResponseEntity.ok(response);
-////  }
-//    return ResponseEntity.ok(null);
-//  }
-
   @GetMapping
   public ResponseEntity<NotesPageResponse> getNotesPage(
       @AuthenticationPrincipal CustomUserDetails user,
@@ -89,12 +78,15 @@ public class NoteController {
     return ResponseEntity.ok(response);
   }
 
-//  // 지울거
-//  @DeleteMapping("/batch")
-//  public ResponseEntity<NoteDeleteResponse> deleteNotesWithReplacement(
-//      @AuthenticationPrincipal CustomUserDetails user,
-//      @RequestBody NoteDeleteRequest request) {
-//    NoteDeleteResponse response = noteService.deleteNotesWithReplacement(user.getUserId(), request);
-//    return ResponseEntity.ok(response);
-//  }
+  @GetMapping("/replacement")
+  public ResponseEntity<NoteResponse> getReplacementNote(
+      @AuthenticationPrincipal CustomUserDetails user,
+      @RequestParam LocalDateTime cursorUpdatedAt,
+      @RequestParam UUID cursorNoteId) {
+
+    NoteCursor cursor = new NoteCursor(cursorUpdatedAt, cursorNoteId);
+    return noteService.getReplacementNote(user.getUserId(), cursor)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.noContent().build());
+  }
 }

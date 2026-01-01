@@ -2,7 +2,6 @@ package prac.demonote.domain.note;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -145,63 +144,6 @@ class NoteRepositoryTest extends PostgresTestContainer {
     assertThat(nextWindow.getContent()).allSatisfy(note ->
         assertThat(firstWindow.getContent()).doesNotContain(note)
     );
-  }
-
-  @Test
-  void 삭제_후_보충할_노트들을_커서_기반으로_조회할_수_있다() {
-    // given
-    User user = createTestUser();
-    for (int i = 0; i < 20; i++) {
-      Note note = new Note("title" + i, "content" + i, user);
-      noteRepository.save(note);
-    }
-    tem.flush();
-    tem.clear();
-
-    Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt", "id");
-
-    // 첫 페이지의 마지막 노트를 커서로 사용
-    Window<Note> firstWindow = noteRepository.findByOwnerId(
-        user.getId(),
-        ScrollPosition.keyset(),
-        Limit.of(10),
-        sort
-    );
-    Note lastNote = firstWindow.getContent().get(firstWindow.getContent().size() - 1);
-
-    // when: 커서 이후 3개 보충 조회 (native query 사용)
-    List<Note> replacements = noteRepository.findReplacementNotes(
-        user.getId(),
-        lastNote.getUpdatedAt(),
-        lastNote.getId(),
-        3
-    );
-
-    // then: 보충 노트들은 첫 페이지와 겹치지 않음
-    assertThat(replacements).isNotEmpty();
-    assertThat(replacements.size()).isLessThanOrEqualTo(3);
-  }
-
-  @Test
-  void 여러_노트를_ID_목록으로_삭제할_수_있다() {
-    // given
-    User user = createTestUser();
-    Note note1 = noteRepository.save(new Note("title1", "content1", user));
-    Note note2 = noteRepository.save(new Note("title2", "content2", user));
-    Note note3 = noteRepository.save(new Note("title3", "content3", user));
-    tem.flush();
-    tem.clear();
-
-    List<UUID> idsToDelete = List.of(note1.getId(), note2.getId());
-
-    // when
-    int deletedCount = noteRepository.deleteByIdInAndOwnerId(idsToDelete, user.getId());
-
-    // then
-    assertThat(deletedCount).isEqualTo(2);
-    assertThat(noteRepository.findById(note1.getId())).isEmpty();
-    assertThat(noteRepository.findById(note2.getId())).isEmpty();
-    assertThat(noteRepository.findById(note3.getId())).isPresent();
   }
 
   private User createTestUser(){

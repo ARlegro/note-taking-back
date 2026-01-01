@@ -25,8 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Window;
 import prac.demonote.domain.note.dto.NoteCursor;
 import prac.demonote.domain.note.dto.NoteCreateRequest;
-import prac.demonote.domain.note.dto.NoteDeleteRequest;
-import prac.demonote.domain.note.dto.NoteDeleteResponse;
 import prac.demonote.domain.note.dto.NoteResponse;
 import prac.demonote.domain.note.dto.NoteUpdateRequest;
 import prac.demonote.domain.note.dto.NotesPageResponse;
@@ -221,61 +219,50 @@ class NoteServiceTest {
   }
 
   @Nested
-  class DeleteNotesWithReplacement {
+  class GetReplacementNote {
 
     @Test
-    void 여러_노트를_삭제하고_보충_노트를_반환받는다() {
+    void 커서_이후_보충_노트_1개를_반환한다() {
       // given
-      UUID noteId1 = UUID.randomUUID();
-      UUID noteId2 = UUID.randomUUID();
       NoteCursor cursor = new NoteCursor(LocalDateTime.now(), UUID.randomUUID());
-      NoteDeleteRequest request = new NoteDeleteRequest(
-          List.of(noteId1, noteId2),
-          cursor,
-          10
+      Note replacementNote = createTestNote("보충 노트", "보충 내용");
+
+      Window<Note> window = Window.from(
+          List.of(replacementNote),
+          (IntFunction<ScrollPosition>) i -> ScrollPosition.keyset(),
+          false
       );
 
-      List<Note> replacementNotes = List.of(
-          createTestNote("보충1", "내용1"),
-          createTestNote("보충2", "내용2")
-      );
-
-      when(noteRepository.deleteByIdInAndOwnerId(request.noteIds(), testUserId))
-          .thenReturn(2);
-      when(noteRepository.findReplacementNotes(eq(testUserId), any(), any(), eq(2)))
-          .thenReturn(replacementNotes);
-      when(noteRepository.countByOwnerId(testUserId)).thenReturn(18L);
+      when(noteRepository.findByOwnerId(eq(testUserId), any(ScrollPosition.class), any(Limit.class), any(Sort.class)))
+          .thenReturn(window);
 
       // when
-      NoteDeleteResponse response = noteService.deleteNotesWithReplacement(testUserId, request);
+      Optional<NoteResponse> result = noteService.getReplacementNote(testUserId, cursor);
 
       // then
-      assertThat(response.deletedIds()).containsExactly(noteId1, noteId2);
-      assertThat(response.replacementNotes()).hasSize(2);
-      assertThat(response.totalElements()).isEqualTo(18);
+      assertThat(result).isPresent();
+      assertThat(result.get().title()).isEqualTo("보충 노트");
     }
 
     @Test
-    void 커서가_없으면_보충노트를_조회하지_않는다() {
+    void 커서_이후_노트가_없으면_빈_Optional_반환() {
       // given
-      UUID noteId = UUID.randomUUID();
-      NoteDeleteRequest request = new NoteDeleteRequest(
-          List.of(noteId),
-          null,  // 커서 없음
-          10
+      NoteCursor cursor = new NoteCursor(LocalDateTime.now(), UUID.randomUUID());
+
+      Window<Note> emptyWindow = Window.from(
+          List.of(),
+          (IntFunction<ScrollPosition>) i -> ScrollPosition.keyset(),
+          false
       );
 
-      when(noteRepository.deleteByIdInAndOwnerId(request.noteIds(), testUserId))
-          .thenReturn(1);
-      when(noteRepository.countByOwnerId(testUserId)).thenReturn(9L);
+      when(noteRepository.findByOwnerId(eq(testUserId), any(ScrollPosition.class), any(Limit.class), any(Sort.class)))
+          .thenReturn(emptyWindow);
 
       // when
-      NoteDeleteResponse response = noteService.deleteNotesWithReplacement(testUserId, request);
+      Optional<NoteResponse> result = noteService.getReplacementNote(testUserId, cursor);
 
       // then
-      assertThat(response.deletedIds()).containsExactly(noteId);
-      assertThat(response.replacementNotes()).isEmpty();
-      assertThat(response.totalElements()).isEqualTo(9);
+      assertThat(result).isEmpty();
     }
   }
 

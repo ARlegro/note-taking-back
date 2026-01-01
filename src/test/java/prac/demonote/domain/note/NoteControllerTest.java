@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -22,8 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import prac.demonote.domain.note.dto.NoteCursor;
 import prac.demonote.domain.note.dto.NoteCreateRequest;
-import prac.demonote.domain.note.dto.NoteDeleteRequest;
-import prac.demonote.domain.note.dto.NoteDeleteResponse;
 import prac.demonote.domain.note.dto.NoteResponse;
 import prac.demonote.domain.note.dto.NoteUpdateRequest;
 import prac.demonote.domain.note.dto.NotesPageResponse;
@@ -203,34 +202,50 @@ class NoteControllerTest {
   }
 
   @Nested
-  class DeleteNotesWithReplacement {
+  class GetReplacementNote {
 
     @Test
-    void 여러_노트를_삭제하고_보충_노트를_받을_수_있다() {
+    void 보충_노트를_조회할_수_있다() {
       // given
-      UUID noteId1 = UUID.randomUUID();
-      UUID noteId2 = UUID.randomUUID();
-      NoteDeleteRequest request = new NoteDeleteRequest(
-          List.of(noteId1, noteId2),
-          new NoteCursor(LocalDateTime.now(), testNoteId),
-          10
-      );
-      NoteDeleteResponse response = new NoteDeleteResponse(
-          List.of(noteId1, noteId2),
-          List.of(new NoteResponse(UUID.randomUUID(), "보충", "내용", LocalDateTime.now(), LocalDateTime.now())),
-          18
+      LocalDateTime cursorTime = LocalDateTime.now();
+      UUID cursorId = UUID.randomUUID();
+      NoteResponse response = new NoteResponse(
+          testNoteId, "보충 노트", "내용",
+          LocalDateTime.now(), LocalDateTime.now()
       );
 
-      when(noteService.deleteNotesWithReplacement(testUserId, request)).thenReturn(response);
+      when(noteService.getReplacementNote(eq(testUserId), any(NoteCursor.class)))
+          .thenReturn(Optional.of(response));
 
       // when
-      ResponseEntity<NoteDeleteResponse> result = noteController.deleteNotesWithReplacement(mockUser, request);
+      ResponseEntity<NoteResponse> result = noteController.getReplacementNote(
+          mockUser, cursorTime, cursorId
+      );
 
       // then
       assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(result.getBody()).isNotNull();
-      assertThat(result.getBody().deletedIds()).hasSize(2);
-      assertThat(result.getBody().replacementNotes()).hasSize(1);
+      assertThat(result.getBody().title()).isEqualTo("보충 노트");
+    }
+
+    @Test
+    void 보충_노트가_없으면_204_반환() {
+      // given
+      LocalDateTime cursorTime = LocalDateTime.now();
+      UUID cursorId = UUID.randomUUID();
+
+      when(noteService.getReplacementNote(eq(testUserId), any(NoteCursor.class)))
+          .thenReturn(Optional.empty());
+
+      // when
+      ResponseEntity<NoteResponse> result = noteController.getReplacementNote(
+          mockUser, cursorTime, cursorId
+      );
+
+      // then
+      assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      assertThat(result.getBody()).isNull();
     }
   }
+
 }

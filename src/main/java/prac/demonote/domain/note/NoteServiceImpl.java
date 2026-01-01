@@ -1,7 +1,7 @@
 package prac.demonote.domain.note;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Limit;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prac.demonote.domain.note.dto.NoteCursor;
 import prac.demonote.domain.note.dto.NoteCreateRequest;
-import prac.demonote.domain.note.dto.NoteDeleteRequest;
-import prac.demonote.domain.note.dto.NoteDeleteResponse;
 import prac.demonote.domain.note.dto.NoteResponse;
 import prac.demonote.domain.note.dto.NoteUpdateRequest;
 import prac.demonote.domain.note.dto.NotesPageResponse;
@@ -101,28 +99,23 @@ public class NoteServiceImpl implements NoteService {
   }
 
   @Override
-  @Transactional
-  public NoteDeleteResponse deleteNotesWithReplacement(UUID userId, NoteDeleteRequest request) {
-    int deletedCount = noteRepository.deleteByIdInAndOwnerId(request.noteIds(), userId);
+  public Optional<NoteResponse> getReplacementNote(UUID userId, NoteCursor cursor) {
+    ScrollPosition scrollPosition = ScrollPosition.forward(
+        Map.of("updatedAt", cursor.lastUpdatedAt(), "id", cursor.lastNoteId())
+    );
 
-    List<NoteResponse> replacementNotes = List.of();
-    if (deletedCount > 0 && request.currentCursor() != null) {
-      List<Note> replacements = noteRepository.findReplacementNotes(
-          userId,
-          request.currentCursor().lastUpdatedAt(),
-          request.currentCursor().lastNoteId(),
-          deletedCount
-      );
-      replacementNotes = replacements.stream().map(this::toResponse).toList();
+    Window<Note> window = noteRepository.findByOwnerId(
+        userId,
+        scrollPosition,
+        Limit.of(1),
+        DEFAULT_SORT
+    );
+
+    if (window.isEmpty()) {
+      return Optional.empty();
     }
 
-    long totalElements = noteRepository.countByOwnerId(userId);
-
-    return new NoteDeleteResponse(
-        request.noteIds(),
-        replacementNotes,
-        totalElements
-    );
+    return Optional.of(toResponse(window.getContent().getFirst()));
   }
 
   private NoteResponse toResponse(Note note) {

@@ -1,10 +1,9 @@
 package prac.demonote.domain.note;
 
+import java.util.Optional;
 import java.util.UUID;
 import prac.demonote.domain.note.dto.NoteCursor;
 import prac.demonote.domain.note.dto.NoteCreateRequest;
-import prac.demonote.domain.note.dto.NoteDeleteRequest;
-import prac.demonote.domain.note.dto.NoteDeleteResponse;
 import prac.demonote.domain.note.dto.NoteResponse;
 import prac.demonote.domain.note.dto.NoteUpdateRequest;
 import prac.demonote.domain.note.dto.NotesPageResponse;
@@ -21,5 +20,5 @@ public interface NoteService {
 
   NotesPageResponse getNotesPage(UUID userId, NoteCursor cursor, int pageSize);
 
-  NoteDeleteResponse deleteNotesWithReplacement(UUID userId, NoteDeleteRequest request);
+  Optional<NoteResponse> getReplacementNote(UUID userId, NoteCursor cursor);
 }
