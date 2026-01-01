@@ -70,6 +70,7 @@ public class NoteServiceImpl implements NoteService {
     noteRepository.deleteById(noteId);
   }
 
+  // TODO: 메서드 오버로딩 (Cuz NoteCursor null 가능)
   @Override
   public NotesPageResponse getNotesPage(UUID userId, NoteCursor cursor, int pageSize) {
     ScrollPosition scrollPosition;

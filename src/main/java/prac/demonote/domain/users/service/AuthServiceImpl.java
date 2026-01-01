@@ -87,6 +87,7 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
+    // todo : 나누기
     private User findOrCreateUser(OAuth2UserInfo userInfo) {
         return userRepository.findByProviderAndProviderId(
                 userInfo.getProvider(),
