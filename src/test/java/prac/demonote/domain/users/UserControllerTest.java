@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -21,13 +22,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
 import prac.demonote.domain.users.service.UserService;
+import prac.demonote.global.security.CustomUserDetailService;
+import prac.demonote.global.security.jwt.JwtProvider;
 import prac.demonote.global.security.oauth2.OAuth2Provider;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(controllers = UserController.class)
-//    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-//        classes = JwtAuthenticationFilter.class))
-//@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
     private static final String BASE_URL = "/api/users";
@@ -36,11 +37,16 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private JsonMapper jsonMapper;
+    private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private JwtProvider jwtProvider;
+
+    @MockitoBean
+    private CustomUserDetailService customUserDetailService;
 
     @Test
     void 유효한_사용자_생성_요청() throws Exception {
