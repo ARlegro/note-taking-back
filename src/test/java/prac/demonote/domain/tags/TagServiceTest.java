@@ -146,8 +146,7 @@ class TagServiceTest {
     void 노트에서_태그를_제거할_수_있다() {
       // given
       when(noteRepository.existsByIdAndOwnerId(testNoteId, testUserId)).thenReturn(true);
-      when(tagRepository.existsByIdAndOwnerId(testTagId, testUserId)).thenReturn(true);
-      when(noteTagRepository.existsByNoteIdAndTagId(testNoteId, testTagId)).thenReturn(true);
+      when(noteTagRepository.deleteByNoteIdAndTagId(testNoteId, testTagId)).thenReturn(1);
 
       // when
       tagService.removeTagFromNote(testUserId, testNoteId, testTagId);
@@ -164,25 +163,14 @@ class TagServiceTest {
       // when & then
       assertThatThrownBy(() -> tagService.removeTagFromNote(testUserId, testNoteId, testTagId))
           .isInstanceOf(NoteNotFoundException.class);
-    }
-
-    @Test
-    void 존재하지_않는_태그_제거시_예외발생() {
-      // given
-      when(noteRepository.existsByIdAndOwnerId(testNoteId, testUserId)).thenReturn(true);
-      when(tagRepository.existsByIdAndOwnerId(testTagId, testUserId)).thenReturn(false);
-
-      // when & then
-      assertThatThrownBy(() -> tagService.removeTagFromNote(testUserId, testNoteId, testTagId))
-          .isInstanceOf(TagNotFoundException.class);
+      verify(noteTagRepository, never()).deleteByNoteIdAndTagId(any(), any());
     }
 
     @Test
     void 노트에_연결되지_않은_태그_제거시_예외발생() {
       // given
       when(noteRepository.existsByIdAndOwnerId(testNoteId, testUserId)).thenReturn(true);
-      when(tagRepository.existsByIdAndOwnerId(testTagId, testUserId)).thenReturn(true);
-      when(noteTagRepository.existsByNoteIdAndTagId(testNoteId, testTagId)).thenReturn(false);
+      when(noteTagRepository.deleteByNoteIdAndTagId(testNoteId, testTagId)).thenReturn(0);
 
       // when & then
       assertThatThrownBy(() -> tagService.removeTagFromNote(testUserId, testNoteId, testTagId))

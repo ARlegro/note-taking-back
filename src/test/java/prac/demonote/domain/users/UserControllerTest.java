@@ -1,5 +1,15 @@
 package prac.demonote.domain.users;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +24,10 @@ import prac.demonote.domain.users.service.UserService;
 import prac.demonote.global.security.oauth2.OAuth2Provider;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@WebMvcTest(UserController.class)
+@WebMvcTest(controllers = UserController.class)
+//    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+//        classes = JwtAuthenticationFilter.class))
+//@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
     private static final String BASE_URL = "/api/users";

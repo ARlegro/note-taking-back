@@ -17,7 +17,7 @@ public interface NoteTagRepository extends JpaRepository<NoteTag, UUID> {
   boolean existsByNoteIdAndTagId(UUID noteId, UUID tagId);
 
   @Modifying
-  void deleteByNoteIdAndTagId(UUID noteId, UUID tagId);
+  int deleteByNoteIdAndTagId(UUID noteId, UUID tagId);
 
   @Modifying
   void deleteByTagId(UUID tagId);

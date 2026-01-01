@@ -52,14 +52,11 @@ public class TagServiceImpl implements TagService {
     if (!noteRepository.existsByIdAndOwnerId(noteId, userId)) {
       throw new NoteNotFoundException("노트를 찾을 수 없습니다.");
     }
-    if (!tagRepository.existsByIdAndOwnerId(tagId, userId)) {
-      throw new TagNotFoundException("태그를 찾을 수 없습니다.");
-    }
-    if (!noteTagRepository.existsByNoteIdAndTagId(noteId, tagId)) {
+
+    int deleted = noteTagRepository.deleteByNoteIdAndTagId(noteId, tagId);
+    if (deleted == 0) {
       throw new TagNotLinkedToNoteException("해당 노트에 연결되지 않은 태그입니다.");
     }
-
-    noteTagRepository.deleteByNoteIdAndTagId(noteId, tagId);
   }
 
   @Override
