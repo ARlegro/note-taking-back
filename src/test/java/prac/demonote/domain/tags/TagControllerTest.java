@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,116 +48,96 @@ class TagControllerTest {
     mockUser = new CustomUserDetails(testUserId, "test@example.com", Role.ROLE_USER);
   }
 
-  @Nested
-  @DisplayName("노트에 태그 추가")
-  class AddTagToNote {
+  @Test
+  void 노트에_태그를_추가하면_201_반환() {
+    // given
+    TagCreateRequest request = new TagCreateRequest("java");
+    TagResponse tag = new TagResponse(testTagId, "java", LocalDateTime.now());
+    NoteTagsResponse response = new NoteTagsResponse(testNoteId, tag);
 
-    @Test
-    void 노트에_태그를_추가하면_201_반환() {
-      // given
-      TagCreateRequest request = new TagCreateRequest("java");
-      TagResponse tag = new TagResponse(testTagId, "java", LocalDateTime.now());
-      NoteTagsResponse response = new NoteTagsResponse(testNoteId, tag);
+    when(tagService.addTagToNote(testUserId, testNoteId, request)).thenReturn(response);
 
-      when(tagService.addTagToNote(testUserId, testNoteId, request)).thenReturn(response);
+    // when
+    ResponseEntity<NoteTagsResponse> result = tagController.addTagToNote(mockUser, testNoteId, request);
 
-      // when
-      ResponseEntity<NoteTagsResponse> result = tagController.addTagToNote(mockUser, testNoteId, request);
-
-      // then
-      assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-      assertThat(result.getBody()).isNotNull();
-      assertThat(result.getBody().noteId()).isEqualTo(testNoteId);
-      assertThat(result.getBody().tags()).isNotNull();
-    }
-
-    @Test
-    void 존재하지_않는_노트에_태그추가시_예외발생() {
-      // given
-      TagCreateRequest request = new TagCreateRequest("java");
-      when(tagService.addTagToNote(testUserId, testNoteId, request))
-          .thenThrow(new NoteNotFoundException("노트를 찾을 수 없습니다."));
-
-      // when & then
-      assertThatThrownBy(() -> tagController.addTagToNote(mockUser, testNoteId, request))
-          .isInstanceOf(NoteNotFoundException.class);
-    }
+    // then
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(result.getBody()).isNotNull();
+    assertThat(result.getBody().noteId()).isEqualTo(testNoteId);
+    assertThat(result.getBody().tags()).isNotNull();
   }
 
-  @Nested
-  @DisplayName("노트에서 태그 제거")
-  class RemoveTagFromNote {
+  @Test
+  void 존재하지_않는_노트에_태그추가시_예외발생() {
+    // given
+    TagCreateRequest request = new TagCreateRequest("java");
+    when(tagService.addTagToNote(testUserId, testNoteId, request))
+        .thenThrow(new NoteNotFoundException("노트를 찾을 수 없습니다."));
 
-    @Test
-    void 노트에서_태그를_제거하면_204_반환() {
-      // when
-      ResponseEntity<Void> result = tagController.removeTagFromNote(mockUser, testNoteId, testTagId);
-
-      // then
-      assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-      verify(tagService).removeTagFromNote(testUserId, testNoteId, testTagId);
-    }
-
-    @Test
-    void 존재하지_않는_태그_제거시_예외발생() {
-      // given
-      doThrow(new TagNotFoundException("태그를 찾을 수 없습니다."))
-          .when(tagService).removeTagFromNote(testUserId, testNoteId, testTagId);
-
-      // when & then
-      assertThatThrownBy(() -> tagController.removeTagFromNote(mockUser, testNoteId, testTagId))
-          .isInstanceOf(TagNotFoundException.class);
-    }
+    // when & then
+    assertThatThrownBy(() -> tagController.addTagToNote(mockUser, testNoteId, request))
+        .isInstanceOf(NoteNotFoundException.class);
   }
 
-  @Nested
-  @DisplayName("사용자의 모든 태그 조회")
-  class GetAllTags {
+  @Test
+  void 노트에서_태그를_제거하면_204_반환() {
+    // when
+    ResponseEntity<Void> result = tagController.removeTagFromNote(mockUser, testNoteId, testTagId);
 
-    @Test
-    void 사용자의_모든_태그를_조회하면_200_반환() {
-      // given
-      List<TagResponse> tags = List.of(
-          new TagResponse(testTagId, "java", LocalDateTime.now()),
-          new TagResponse(UUID.randomUUID(), "spring", LocalDateTime.now())
-      );
-      TagsResponse response = new TagsResponse(tags);
-
-      when(tagService.getAllTags(testUserId)).thenReturn(response);
-
-      // when
-      ResponseEntity<TagsResponse> result = tagController.getAllTags(mockUser);
-
-      // then
-      assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-      assertThat(result.getBody()).isNotNull();
-      assertThat(result.getBody().tags()).hasSize(2);
-    }
+    // then
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    verify(tagService).removeTagFromNote(testUserId, testNoteId, testTagId);
   }
 
-  @Nested
-  @DisplayName("태그 삭제")
-  class DeleteTag {
+  @Test
+  void 존재하지_않는_태그_제거시_예외발생() {
+    // given
+    doThrow(new TagNotFoundException("태그를 찾을 수 없습니다."))
+        .when(tagService).removeTagFromNote(testUserId, testNoteId, testTagId);
 
-    @Test
-    void 태그를_삭제하면_204_반환() {
-      // when
-      ResponseEntity<Void> result = tagController.deleteTag(mockUser, testTagId);
+    // when & then
+    assertThatThrownBy(() -> tagController.removeTagFromNote(mockUser, testNoteId, testTagId))
+        .isInstanceOf(TagNotFoundException.class);
+  }
 
-      // then
-      assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-      verify(tagService).deleteTag(testUserId, testTagId);
-    }
+  @Test
+  void 사용자의_모든_태그를_조회하면_200_반환() {
+    // given
+    List<TagResponse> tags = List.of(
+        new TagResponse(testTagId, "java", LocalDateTime.now()),
+        new TagResponse(UUID.randomUUID(), "spring", LocalDateTime.now())
+    );
+    TagsResponse response = new TagsResponse(tags);
 
-    @Test
-    void 존재하지_않는_태그_삭제시_예외발생() {
-      // given
-      doThrow(new TagNotFoundException("태그를 찾을 수 없습니다."))
-          .when(tagService).deleteTag(testUserId, testTagId);
+    when(tagService.getAllTags(testUserId)).thenReturn(response);
 
-      // when & then
-      assertThatThrownBy(() -> tagController.deleteTag(mockUser, testTagId))
-          .isInstanceOf(TagNotFoundException.class);
-    }
+    // when
+    ResponseEntity<TagsResponse> result = tagController.getAllTags(mockUser);
+
+    // then
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(result.getBody()).isNotNull();
+    assertThat(result.getBody().tags()).hasSize(2);
+  }
+
+  @Test
+  void 태그를_삭제하면_204_반환() {
+    // when
+    ResponseEntity<Void> result = tagController.deleteTag(mockUser, testTagId);
+
+    // then
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    verify(tagService).deleteTag(testUserId, testTagId);
+  }
+
+  @Test
+  void 존재하지_않는_태그_삭제시_예외발생() {
+    // given
+    doThrow(new TagNotFoundException("태그를 찾을 수 없습니다."))
+        .when(tagService).deleteTag(testUserId, testTagId);
+
+    // when & then
+    assertThatThrownBy(() -> tagController.deleteTag(mockUser, testTagId))
+        .isInstanceOf(TagNotFoundException.class);
   }
 }

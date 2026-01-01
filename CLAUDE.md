@@ -140,6 +140,7 @@ This project MUST follow TDD. Never write implementation code before tests.
 
 - Use `given_when_then` pattern for test method names
 - Example: `givenValidNote_whenSave_thenReturnsSavedNote()`
+- Do not use `@Nested`; keep tests at the top-level class only
 
 ### Test Implementation Order
 
