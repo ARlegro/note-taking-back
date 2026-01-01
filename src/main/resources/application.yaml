@@ -6,13 +6,13 @@ spring:
     oauth2:
       client:
         registration:
-          google:
+          google: # 요게 RegistrationId
             client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
             client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
             scope: email, profile
             redirect-uri: "{baseUrl}/api/auth/oauth2/callback/{registrationId}"
             authorization-grant-type: authorization_code
-          kakao:
+          kakao: # 요게 RegistrationId
             client-id: ${KAKAO_CLIENT_ID:your-kakao-client-id}
             client-secret: ${KAKAO_CLIENT_SECRET:your-kakao-client-secret}
             scope: profile_nickname, account_email
@@ -87,3 +87,6 @@ aws:
     bucket: ${AWS_BUCKET}
     region: ${AWS_REGION}
 #    org.springframework.http.converter: TRACE
+
+app:
+  base-url: http://localhost:8080

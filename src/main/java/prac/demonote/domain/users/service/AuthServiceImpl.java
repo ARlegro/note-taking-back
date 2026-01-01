@@ -100,5 +100,7 @@ public class AuthServiceImpl implements AuthService {
                     userInfo.getProviderId()
                 )
             ));
+        // user save할 때, 이거 중복 검증 안되니까 나중에 나눠야 함(아닌가 필요없나??)
+        // userservice에서 save관련 로직 만듥
     }
 }

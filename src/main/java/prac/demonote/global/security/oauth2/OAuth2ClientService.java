@@ -2,6 +2,7 @@ package prac.demonote.global.security.oauth2;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,6 +26,9 @@ public class OAuth2ClientService {
     private final RestClient restClient;
     private final OAuth2UserInfoFactory userInfoFactory;
 
+    @Value( "${app.base-url}")
+    private String BASE_URL;
+
     public String getAuthorizationUrl(OAuth2Provider provider, String state) {
         ClientRegistration registration = getClientRegistration(provider);
 
@@ -44,10 +48,10 @@ public class OAuth2ClientService {
 
         // OAuth2 Token Request는 기본 스펙이 application/x-www-form-urlencoded 형식 이라 쩔수 DTO대신 MultivalueMap으로
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
         params.add("client_id", registration.getClientId());
         params.add("client_secret", registration.getClientSecret());
         params.add("code", code);
+        params.add("grant_type", "authorization_code");
         params.add("redirect_uri", resolveRedirectUri(registration));
 
         try {
@@ -67,6 +71,7 @@ public class OAuth2ClientService {
         ClientRegistration registration = getClientRegistration(provider);
 
         try {
+            // GET https://www.googleapis.com/drive/v2/files?access_token=access_token
             Map<String, Object> attributes = restClient.get()
                 .uri(registration.getProviderDetails().getUserInfoEndpoint().getUri())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -95,7 +100,7 @@ public class OAuth2ClientService {
     private String resolveRedirectUri(ClientRegistration registration) {
         String redirectUri = registration.getRedirectUri();
         return redirectUri
-            .replace("{baseUrl}", "http://localhost:8080") // todo 하드코딩 지우기
+            .replace("{baseUrl}", BASE_URL) // todo 하드코딩 지우기
             .replace("{registrationId}", registration.getRegistrationId());
     }
 }
