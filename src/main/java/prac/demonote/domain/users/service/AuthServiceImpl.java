@@ -57,8 +57,8 @@ public class AuthServiceImpl implements AuthService {
         User user = userService.findOrCreateOAuthUser(userInfo);
 
         // 6. JWT 토큰 발급
-        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail());
-        String refreshToken = jwtProvider.createRefreshToken(user.getId(), user.getEmail());
+        var accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail());
+        var refreshToken = jwtProvider.createRefreshToken(user.getId(), user.getEmail());
 
         return new LoginResponse(
             accessToken,

@@ -89,4 +89,4 @@ aws:
 #    org.springframework.http.converter: TRACE
 
 app:
-  base-url: http://localhost:8080
+  base-url: ${APP_BASE_URL:http://localhost:8080}

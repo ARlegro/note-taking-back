@@ -23,11 +23,11 @@ import prac.demonote.global.security.oauth2.OAuth2Provider;
 @NoArgsConstructor(access = PROTECTED)
 public class User extends BaseTimeWithUpdateEntity {
 
-  @Column
+  @Column(name = "email", unique = true)
   private String email;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(name = "provider", nullable = false)
   private OAuth2Provider provider;
 
   @Column(name = "provider_id", nullable = false)
