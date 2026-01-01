@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prac.demonote.common.entity.BaseTimeWithUpdateEntity;
@@ -15,7 +16,9 @@ import prac.demonote.global.security.oauth2.OAuth2Provider;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"provider", "provider_id"})
+})
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class User extends BaseTimeWithUpdateEntity {
@@ -27,7 +30,7 @@ public class User extends BaseTimeWithUpdateEntity {
   @Column(nullable = false)
   private OAuth2Provider provider;
 
-  @Column(nullable = false)
+  @Column(name = "provider_id", nullable = false)
   private String providerId;
 
   public User(String email, OAuth2Provider provider, String providerId) {

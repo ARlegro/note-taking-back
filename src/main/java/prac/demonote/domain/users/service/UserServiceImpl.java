@@ -3,12 +3,14 @@ package prac.demonote.domain.users.service;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import prac.demonote.domain.users.User;
 import prac.demonote.domain.users.UserMapper;
 import prac.demonote.domain.users.UserNotFoundException;
 import prac.demonote.domain.users.UserRepository;
 import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
+import prac.demonote.global.security.oauth2.userinfo.OAuth2UserInfo;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +31,21 @@ public class UserServiceImpl implements UserService {
     User user = userMapper.toEntity(request);
     User savedUser = userRepository.save(user);
     return userMapper.toResponse(savedUser);
+  }
+
+  @Override
+  @Transactional
+  public User findOrCreateOAuthUser(OAuth2UserInfo userInfo) {
+    return userRepository.findByProviderAndProviderId(
+            userInfo.getProvider(),
+            userInfo.getProviderId()
+        )
+        .orElseGet(() -> userRepository.save(
+            new User(
+                userInfo.getEmail(),
+                userInfo.getProvider(),
+                userInfo.getProviderId()
+            )
+        ));
   }
 }

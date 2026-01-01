@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +35,9 @@ class AuthServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserService userService;
 
     @Mock
     private JwtProvider jwtProvider;
@@ -92,8 +94,7 @@ class AuthServiceTest {
         when(stateService.validateAndConsume(state)).thenReturn(provider);
         when(oAuth2ClientService.exchangeCodeForToken(OAuth2Provider.GOOGLE, code)).thenReturn(tokenResponse);
         when(oAuth2ClientService.getUserInfo(OAuth2Provider.GOOGLE, "provider-access-token")).thenReturn(userInfo);
-        when(userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "google-123")).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userService.findOrCreateOAuthUser(userInfo)).thenReturn(user);
         when(userMapper.toResponse(user)).thenReturn(userResponse);
         when(jwtProvider.createAccessToken(any(), eq("test@gmail.com"))).thenReturn("jwt-access-token");
         when(jwtProvider.createRefreshToken(any(), eq("test@gmail.com"))).thenReturn("jwt-refresh-token");
@@ -127,8 +128,7 @@ class AuthServiceTest {
         when(stateService.validateAndConsume(state)).thenReturn(provider);
         when(oAuth2ClientService.exchangeCodeForToken(OAuth2Provider.GOOGLE, code)).thenReturn(tokenResponse);
         when(oAuth2ClientService.getUserInfo(OAuth2Provider.GOOGLE, "access-token")).thenReturn(userInfo);
-        when(userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "new-user-id")).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(newUser);
+        when(userService.findOrCreateOAuthUser(userInfo)).thenReturn(newUser);
         when(userMapper.toResponse(any())).thenReturn(new UserResponse(UUID.randomUUID(), "new@gmail.com", OAuth2Provider.GOOGLE, "new-user-id"));
         when(jwtProvider.createAccessToken(any(), any())).thenReturn("access");
         when(jwtProvider.createRefreshToken(any(), any())).thenReturn("refresh");
@@ -137,7 +137,7 @@ class AuthServiceTest {
         authService.processOAuth2Callback(provider, code, state);
 
         // then
-        verify(userRepository).save(any(User.class));
+        verify(userService).findOrCreateOAuthUser(userInfo);
     }
 
     @Test
@@ -161,7 +161,7 @@ class AuthServiceTest {
         when(stateService.validateAndConsume(state)).thenReturn(provider);
         when(oAuth2ClientService.exchangeCodeForToken(OAuth2Provider.GOOGLE, code)).thenReturn(tokenResponse);
         when(oAuth2ClientService.getUserInfo(OAuth2Provider.GOOGLE, "access-token")).thenReturn(userInfo);
-        when(userRepository.findByProviderAndProviderId(OAuth2Provider.GOOGLE, "existing-user-id")).thenReturn(Optional.of(existingUser));
+        when(userService.findOrCreateOAuthUser(userInfo)).thenReturn(existingUser);
         when(userMapper.toResponse(existingUser)).thenReturn(new UserResponse(existingUserId, "existing@gmail.com", OAuth2Provider.GOOGLE, "existing-user-id"));
         when(jwtProvider.createAccessToken(any(), any())).thenReturn("access");
         when(jwtProvider.createRefreshToken(any(), any())).thenReturn("refresh");
@@ -170,7 +170,7 @@ class AuthServiceTest {
         authService.processOAuth2Callback(provider, code, state);
 
         // then
-        verify(userRepository, never()).save(any(User.class));
+        verify(userService).findOrCreateOAuthUser(userInfo);
     }
 
     @Test

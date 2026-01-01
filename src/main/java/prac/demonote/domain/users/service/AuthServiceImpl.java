@@ -26,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final OAuth2ClientService oAuth2ClientService;
     private final OAuth2StateService stateService;
+    private final UserService userService;
     private final UserMapper userMapper;
 
     @Override
@@ -53,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         OAuth2UserInfo userInfo = oAuth2ClientService.getUserInfo(oAuth2Provider, tokenResponse.accessToken());
 
         // 5. 사용자 조회 또는 생성
-        User user = findOrCreateUser(userInfo);
+        User user = userService.findOrCreateOAuthUser(userInfo);
 
         // 6. JWT 토큰 발급
         String accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail());
@@ -87,20 +88,4 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    // todo : 나누기
-    private User findOrCreateUser(OAuth2UserInfo userInfo) {
-        return userRepository.findByProviderAndProviderId(
-                userInfo.getProvider(),
-                userInfo.getProviderId()
-            )
-            .orElseGet(() -> userRepository.save(
-                new User(
-                    userInfo.getEmail(),
-                    userInfo.getProvider(),
-                    userInfo.getProviderId()
-                )
-            ));
-        // user save할 때, 이거 중복 검증 안되니까 나중에 나눠야 함(아닌가 필요없나??)
-        // userservice에서 save관련 로직 만듥
-    }
 }
