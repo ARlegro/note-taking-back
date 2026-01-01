@@ -33,6 +33,7 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
+  // todo : global로 뺴기
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<Void> handleUserNotFound() {
     return ResponseEntity.notFound().build();

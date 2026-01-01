@@ -34,4 +34,9 @@ public class Note extends BaseTimeWithUpdateEntity {
     this.content = content;
     this.owner = owner;
   }
+
+  public void update(String title, String content) {
+    this.title = title;
+    this.content = content;
+  }
 }

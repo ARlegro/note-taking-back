@@ -1,23 +1,137 @@
 package prac.demonote.domain.note;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.ScrollPosition;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Window;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import prac.demonote.domain.note.dto.NoteCursor;
+import prac.demonote.domain.note.dto.NoteCreateRequest;
+import prac.demonote.domain.note.dto.NoteDeleteRequest;
+import prac.demonote.domain.note.dto.NoteDeleteResponse;
+import prac.demonote.domain.note.dto.NoteResponse;
+import prac.demonote.domain.note.dto.NoteUpdateRequest;
+import prac.demonote.domain.note.dto.NotesPageResponse;
+import prac.demonote.domain.note.model.Note;
+import prac.demonote.domain.users.User;
+import prac.demonote.domain.users.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NoteServiceImpl implements NoteService {
 
+  private static final Sort DEFAULT_SORT = Sort.by(Sort.Direction.DESC, "updatedAt", "id");
+
   private final NoteRepository noteRepository;
+  private final UserRepository userRepository;
 
-//  public UUID save(NoteCreateRequestDTO dto){
-//    // 테스트 코드 연습용
-//    if (true){
-//      throw new RuntimeException("시발 끝이다");
-//    }
-//
-//    Note entity = dto.toEntity();
-//    Note save = noteRepository.save(entity);
-//    return save.getId();
-//  }
+  @Override
+  @Transactional
+  public NoteResponse createNote(UUID userId, NoteCreateRequest request) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
 
+    Note note = new Note(request.title(), request.content(), user);
+    Note saved = noteRepository.save(note);
+    return toResponse(saved);
+  }
+
+  @Override
+  public NoteResponse getNote(UUID userId, UUID noteId) {
+    Note note = noteRepository.findByIdAndOwnerId(noteId, userId)
+        .orElseThrow(() -> new NoteNotFoundException("Note not found: " + noteId));
+    return toResponse(note);
+  }
+
+  @Override
+  @Transactional
+  public NoteResponse updateNote(UUID userId, UUID noteId, NoteUpdateRequest request) {
+    Note note = noteRepository.findByIdAndOwnerId(noteId, userId)
+        .orElseThrow(() -> new NoteNotFoundException("Note not found: " + noteId));
+
+    note.update(request.title(), request.content());
+    return toResponse(note);
+  }
+
+  @Override
+  @Transactional
+  public void deleteNote(UUID userId, UUID noteId) {
+    if (!noteRepository.existsByIdAndOwnerId(noteId, userId)) {
+      throw new NoteNotFoundException("Note not found: " + noteId);
+    }
+    noteRepository.deleteById(noteId);
+  }
+
+  @Override
+  public NotesPageResponse getNotesPage(UUID userId, NoteCursor cursor, int pageSize) {
+    ScrollPosition scrollPosition;
+    scrollPosition = (cursor == null)
+        ? ScrollPosition.keyset()
+        : ScrollPosition.forward(Map.of("updatedAt", cursor.lastUpdatedAt(), "id", cursor.lastNoteId()));
+
+    Window<Note> window = noteRepository.findByOwnerId(
+        userId,
+        scrollPosition,
+        Limit.of(pageSize),
+        DEFAULT_SORT
+    );
+
+    NoteCursor nextCursor = null;
+    if (window.hasNext() && !window.isEmpty()) {
+      Note lastNote = window.getContent().getLast();
+      nextCursor = new NoteCursor(lastNote.getUpdatedAt(), lastNote.getId());
+    }
+
+    // TODO: 이거 일단 넣었는데 UX에 필요없으면 빼기
+    long totalElements = noteRepository.countByOwnerId(userId);
+
+    return new NotesPageResponse(
+        window.getContent().stream().map(this::toResponse).toList(),
+        nextCursor,
+        pageSize,
+        totalElements,
+        window.hasNext()
+    );
+  }
+
+  @Override
+  @Transactional
+  public NoteDeleteResponse deleteNotesWithReplacement(UUID userId, NoteDeleteRequest request) {
+    int deletedCount = noteRepository.deleteByIdInAndOwnerId(request.noteIds(), userId);
+
+    List<NoteResponse> replacementNotes = List.of();
+    if (deletedCount > 0 && request.currentCursor() != null) {
+      List<Note> replacements = noteRepository.findReplacementNotes(
+          userId,
+          request.currentCursor().lastUpdatedAt(),
+          request.currentCursor().lastNoteId(),
+          deletedCount
+      );
+      replacementNotes = replacements.stream().map(this::toResponse).toList();
+    }
+
+    long totalElements = noteRepository.countByOwnerId(userId);
+
+    return new NoteDeleteResponse(
+        request.noteIds(),
+        replacementNotes,
+        totalElements
+    );
+  }
+
+  private NoteResponse toResponse(Note note) {
+    return new NoteResponse(
+        note.getId(),
+        note.getTitle(),
+        note.getContent(),
+        note.getCreatedAt(),
+        note.getUpdatedAt()
+    );
+  }
 }
