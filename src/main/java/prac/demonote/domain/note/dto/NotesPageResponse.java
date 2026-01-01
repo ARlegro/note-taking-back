@@ -6,7 +6,6 @@ public record NotesPageResponse(
     List<NoteResponse> notes,
     NoteCursor nextCursor,
     int pageSize,
-    long totalElements,
     boolean hasNext
 ) {
 }

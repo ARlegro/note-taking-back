@@ -1,5 +1,6 @@
 package prac.demonote.domain.note;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +17,8 @@ import prac.demonote.domain.note.dto.NoteResponse;
 import prac.demonote.domain.note.dto.NoteUpdateRequest;
 import prac.demonote.domain.note.dto.NotesPageResponse;
 import prac.demonote.domain.note.model.Note;
+import prac.demonote.domain.tags.NoteTagRepository;
+import prac.demonote.domain.tags.dto.TagResponse;
 import prac.demonote.domain.users.User;
 import prac.demonote.domain.users.UserRepository;
 
@@ -28,6 +31,7 @@ public class NoteServiceImpl implements NoteService {
 
   private final NoteRepository noteRepository;
   private final UserRepository userRepository;
+  private final NoteTagRepository noteTagRepository;
 
   @Override
   @Transactional
@@ -86,14 +90,10 @@ public class NoteServiceImpl implements NoteService {
       nextCursor = new NoteCursor(lastNote.getUpdatedAt(), lastNote.getId());
     }
 
-    // TODO: 이거 일단 넣었는데 UX에 필요없으면 빼기
-    long totalElements = noteRepository.countByOwnerId(userId);
-
     return new NotesPageResponse(
         window.getContent().stream().map(this::toResponse).toList(),
         nextCursor,
         pageSize,
-        totalElements,
         window.hasNext()
     );
   }
@@ -119,10 +119,15 @@ public class NoteServiceImpl implements NoteService {
   }
 
   private NoteResponse toResponse(Note note) {
+    List<TagResponse> tags = noteTagRepository.findByNoteId(note.getId()).stream()
+        .map(noteTag -> TagResponse.from(noteTag.getTag()))
+        .toList();
+
     return new NoteResponse(
         note.getId(),
         note.getTitle(),
         note.getContent(),
+        tags,
         note.getCreatedAt(),
         note.getUpdatedAt()
     );

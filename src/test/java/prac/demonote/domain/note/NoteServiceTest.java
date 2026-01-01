@@ -29,6 +29,7 @@ import prac.demonote.domain.note.dto.NoteResponse;
 import prac.demonote.domain.note.dto.NoteUpdateRequest;
 import prac.demonote.domain.note.dto.NotesPageResponse;
 import prac.demonote.domain.note.model.Note;
+import prac.demonote.domain.tags.NoteTagRepository;
 import prac.demonote.domain.users.User;
 import prac.demonote.domain.users.UserRepository;
 import prac.demonote.global.security.oauth2.OAuth2Provider;
@@ -41,6 +42,9 @@ class NoteServiceTest {
 
   @Mock
   private UserRepository userRepository;
+
+  @Mock
+  private NoteTagRepository noteTagRepository;
 
   @InjectMocks
   private NoteServiceImpl noteService;
@@ -182,14 +186,12 @@ class NoteServiceTest {
 
       when(noteRepository.findByOwnerId(eq(testUserId), any(ScrollPosition.class), any(Limit.class), any(Sort.class)))
           .thenReturn(window);
-      when(noteRepository.countByOwnerId(testUserId)).thenReturn(15L);
 
       // when
       NotesPageResponse response = noteService.getNotesPage(testUserId, null, 2);
 
       // then
       assertThat(response.notes()).hasSize(2);
-      assertThat(response.totalElements()).isEqualTo(15);
       assertThat(response.hasNext()).isTrue();
       assertThat(response.nextCursor()).isNotNull();
     }
@@ -206,7 +208,6 @@ class NoteServiceTest {
 
       when(noteRepository.findByOwnerId(eq(testUserId), any(ScrollPosition.class), any(Limit.class), any(Sort.class)))
           .thenReturn(window);
-      when(noteRepository.countByOwnerId(testUserId)).thenReturn(15L);
 
       // when
       NotesPageResponse response = noteService.getNotesPage(testUserId, cursor, 2);

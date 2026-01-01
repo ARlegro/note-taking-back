@@ -57,7 +57,7 @@ class NoteControllerTest {
       // given
       NoteCreateRequest request = new NoteCreateRequest("제목", "내용");
       NoteResponse response = new NoteResponse(
-          testNoteId, "제목", "내용",
+          testNoteId, "제목", "내용", List.of(),
           LocalDateTime.now(), LocalDateTime.now()
       );
 
@@ -80,7 +80,7 @@ class NoteControllerTest {
     void 노트를_조회할_수_있다() {
       // given
       NoteResponse response = new NoteResponse(
-          testNoteId, "제목", "내용",
+          testNoteId, "제목", "내용", List.of(),
           LocalDateTime.now(), LocalDateTime.now()
       );
 
@@ -115,7 +115,7 @@ class NoteControllerTest {
       // given
       NoteUpdateRequest request = new NoteUpdateRequest("수정된 제목", "수정된 내용");
       NoteResponse response = new NoteResponse(
-          testNoteId, "수정된 제목", "수정된 내용",
+          testNoteId, "수정된 제목", "수정된 내용", List.of(),
           LocalDateTime.now(), LocalDateTime.now()
       );
 
@@ -152,11 +152,10 @@ class NoteControllerTest {
       // given
       NotesPageResponse response = new NotesPageResponse(
           List.of(
-              new NoteResponse(testNoteId, "제목1", "내용1", LocalDateTime.now(), LocalDateTime.now())
+              new NoteResponse(testNoteId, "제목1", "내용1", List.of(), LocalDateTime.now(), LocalDateTime.now())
           ),
           new NoteCursor(LocalDateTime.now(), testNoteId),
           10,
-          15,
           true
       );
 
@@ -169,7 +168,6 @@ class NoteControllerTest {
       assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(result.getBody()).isNotNull();
       assertThat(result.getBody().hasNext()).isTrue();
-      assertThat(result.getBody().totalElements()).isEqualTo(15);
     }
 
     @Test
@@ -179,11 +177,10 @@ class NoteControllerTest {
       UUID cursorId = UUID.randomUUID();
       NotesPageResponse response = new NotesPageResponse(
           List.of(
-              new NoteResponse(testNoteId, "제목2", "내용2", LocalDateTime.now(), LocalDateTime.now())
+              new NoteResponse(testNoteId, "제목2", "내용2", List.of(), LocalDateTime.now(), LocalDateTime.now())
           ),
           null,
           10,
-          15,
           false
       );
 
@@ -210,7 +207,7 @@ class NoteControllerTest {
       LocalDateTime cursorTime = LocalDateTime.now();
       UUID cursorId = UUID.randomUUID();
       NoteResponse response = new NoteResponse(
-          testNoteId, "보충 노트", "내용",
+          testNoteId, "보충 노트", "내용", List.of(),
           LocalDateTime.now(), LocalDateTime.now()
       );
 
