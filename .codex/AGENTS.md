@@ -39,6 +39,7 @@ TDD 필수 규칙(위반 금지):
 - 한국어로 요구사항 형태 작성 (예: `사용자ID로_노트를_조회할_수_있다()`)
 - 함수명에 given/when/then 사용 금지
 - 코드 내부는 `// given`, `// when`, `// then` 주석으로 구분
+⚠ @Nested 사용 금지: 테스트는 최상위 클래스에만 작성
 
 ## TDD Steps
 ### Step 1: Repository Layer

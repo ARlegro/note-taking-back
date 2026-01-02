@@ -1,20 +1,5 @@
 package prac.demonote.domain.users;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import prac.demonote.domain.users.dto.UserCreateRequest;
-import prac.demonote.domain.users.dto.UserResponse;
-import prac.demonote.domain.users.service.UserService;
-import tools.jackson.databind.json.JsonMapper;
-
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -24,7 +9,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import prac.demonote.domain.users.dto.UserCreateRequest;
+import prac.demonote.domain.users.dto.UserResponse;
+import prac.demonote.domain.users.service.UserService;
+import prac.demonote.global.security.CustomUserDetailService;
+import prac.demonote.global.security.jwt.JwtProvider;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
+import tools.jackson.databind.json.JsonMapper;
+
+@WebMvcTest(controllers = UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
     private static final String BASE_URL = "/api/users";
@@ -33,18 +37,23 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private JsonMapper jsonMapper;
+    private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private JwtProvider jwtProvider;
+
+    @MockitoBean
+    private CustomUserDetailService customUserDetailService;
 
     @Test
     void 유효한_사용자_생성_요청() throws Exception {
         String endpoint = BASE_URL;
         UUID userId = UUID.randomUUID();
         String email = "new@example.com";
-        String provider = "GITHUB";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "gh-123";
         UserCreateRequest request = new UserCreateRequest(email, provider, providerId);
         UserResponse response = new UserResponse(userId, email, provider, providerId);
@@ -62,7 +71,7 @@ class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userId.toString()))
                 .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.provider").value(provider))
+                .andExpect(jsonPath("$.provider").value(provider.name()))
                 .andExpect(jsonPath("$.providerId").value(providerId));
 
         ArgumentCaptor<UserCreateRequest> captor = ArgumentCaptor.forClass(UserCreateRequest.class);
@@ -75,7 +84,7 @@ class UserControllerTest {
         String endpoint = BASE_URL + "/{userId}";
         UUID userId = UUID.randomUUID();
         String email = "user@example.com";
-        String provider = "GOOGLE";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "provider-id";
         UserResponse response = new UserResponse(userId, email, provider, providerId);
 
@@ -90,7 +99,7 @@ class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userId.toString()))
                 .andExpect(jsonPath("$.email").value(email))
-                .andExpect(jsonPath("$.provider").value(provider))
+                .andExpect(jsonPath("$.provider").value(provider.name()))
                 .andExpect(jsonPath("$.providerId").value(providerId));
     }
 

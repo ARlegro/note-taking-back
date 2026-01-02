@@ -13,22 +13,35 @@ services:
   postgres:
     image: postgres:latest
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     env_file:
       - .env
     environment:
-      # 귀찮
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: user1234
-      POSTGRES_DB: note
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
 
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U appuser -d appdb" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
   postgres_data:
+  redis_data:

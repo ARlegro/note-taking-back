@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import prac.demonote.domain.users.dto.UserCreateRequest;
 import prac.demonote.domain.users.dto.UserResponse;
+import prac.demonote.global.security.oauth2.OAuth2Provider;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +34,7 @@ class UserServiceTest {
     void 사용자_조회하면_응답을_반환한다() {
         UUID userId = UUID.randomUUID();
         String email = "user@example.com";
-        String provider = "GOOGLE";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "provider-id";
         User user = new User(email, provider, providerId);
         UserResponse response = new UserResponse(userId, email, provider, providerId);
@@ -53,7 +54,7 @@ class UserServiceTest {
     void 사용자_생성하면_저장된_정보를_반환한다() {
         UUID userId = UUID.randomUUID();
         String email = "new@example.com";
-        String provider = "GITHUB";
+        OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "gh-123";
         UserCreateRequest request = new UserCreateRequest(email, provider, providerId);
         User toSave = new User(email, provider, providerId);
